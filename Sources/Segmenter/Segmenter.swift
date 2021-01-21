@@ -216,7 +216,7 @@ public class Segmenter: UIControl {
     private let scrollContainer = UIView()
     private var previousIndex = -1
     
-    private var segmentViews: [Segment.View] = []
+    private var segmentViews: [UIControl & SegmentViewProvider] = []
     
     private let supplementaryView = ClickThroughView()
     private var subSupplementaryViewMaps: [Int: [UIView]?] = [:]
@@ -314,7 +314,7 @@ public class Segmenter: UIControl {
     
     func reloadSegments() {
         segmentViews.forEach({ $0.removeFromSuperview() })
-        segmentViews = segments.map({ Segment.View($0, configure: segmentConfigure) })
+        segmentViews = segments.map({ $0.kind.segmentViewType.init($0, configure: segmentConfigure) })
         for (index, segmentView) in segmentViews.enumerated() {
             segmentView.tag = index + 100
             segmentView.isSelected = index == currentIndex
@@ -400,7 +400,7 @@ public class Segmenter: UIControl {
     }
     
     // MARK:- segment view's tap action
-    @objc private func segmentViewTapAction(_ sender: Segment.View) {
+    @objc private func segmentViewTapAction(_ sender: UIControl) {
         let fromIndex = self.segmentViews.enumerated().first(where: { $0.element.isSelected })?.offset ?? 0
         let segmentViewEnumerated = self.segmentViews.enumerated().first(where: { $0.element == sender })
         let tappedIndex = segmentViewEnumerated?.offset ?? 0
@@ -513,11 +513,13 @@ public class Segmenter: UIControl {
             segmentViews.forEach({ $0.sizeToFit(); w += $0.frame.width })
             w += (CGFloat(segmentViews.count - 1) * segmentSpacing)
             
-            scrollFrame.origin.x = (scrollView.frame.width - w) / 2
+            let centerX = (scrollView.frame.width - w) / 2
+            scrollFrame.origin.x = max(0, centerX)
             scrollFrame.origin.y = contentInset.top
             scrollFrame.size.height -= contentInset.vertical
-            scrollFrame.size.width = w
+            scrollFrame.size.width = scrollFrame.origin.x == 0 ? w + centerX : w
             scrollContainer.frame = scrollFrame
+            scrollView.contentSize = .init(width: w, height: scrollFrame.height)
             segmentViewLayout()
             
         case .evened:

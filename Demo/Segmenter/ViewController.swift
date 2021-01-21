@@ -50,13 +50,11 @@ class ViewController: UIViewController {
         v.backgroundColor = .red
         let r = UIView()
         r.backgroundColor = .blue
-        let imageView = UIImageView(image: UIImage(named: "chuanghua-2"))
-        let imgv = UIImageView(image: UIImage(named: "chuanghua"))
-        let segmentView = SegmentView(activeView: imgv, inactiveView: imageView, activeSize: .init(width: 44, height: 24), inactiveSize: .init(width: 34, height: 18.57))
         
         segmenter.isShadowShouldShow = false
         segmenter.segments = [
-            .init(view: segmentView, supplementaryViews: [.view(print2Button, 2)]),
+            .init(view: v, inactiveView: r, activeSize: CGSize(width: 44, height: 24), inactiveSize: CGSize(width: 34, height: 18.57)),
+            .init(image: UIImage(named: "chuanghua")!, inactiveImage: UIImage(named: "chuanghua-2")!, activeSize: CGSize(width: 32, height: 32), inactiveSize: CGSize(width: 24, height: 24)),
             .init(title: "专辑", supplementaryViews: [.view(print2Button), .view(print3Button, 5)]),
             .init(title: "歌曲", supplementaryViews: [.view(printButton), .view(print2Button), .view(print3Button)])
         ]
@@ -69,20 +67,19 @@ class ViewController: UIViewController {
         minorSegmenter.distribution = .evened
         minorSegmenter.segmentConfigure = .minor
         minorSegmenter.segments = [
-            .init(title: "周杰伦"),
-            .init(title: "林俊杰"),
-            .init(title: "胡彦斌")
+            .init(title: "周杰伦,周杰伦,周杰伦"),
+            .init(title: "林俊杰,周杰伦"),
+            .init(title: "胡彦斌,周杰伦"),
         ]
         view.addSubview(minorSegmenter)
         
         minorCenteredSegmenter.backgroundView.backgroundColor = .clear
         minorCenteredSegmenter.distribution = .centered
-        minorCenteredSegmenter.segmentConfigure = .minor
+        minorCenteredSegmenter.segmentConfigure = .main
         minorCenteredSegmenter.segments = [
-            .init(title: "left"),
-            .init(title: "right"),
-            .init(title: "top"),
-            .init(title: "bottom")
+            .init(title: "过去"),
+            .init(title: "现在"),
+            .init(title: "未来"),
         ]
         view.addSubview(minorCenteredSegmenter)
         
@@ -137,7 +134,7 @@ class ViewController: UIViewController {
 
 extension ViewController: SegmenterSelectedDelegate {
     func segmenter(_ segmenter: Segmenter, didSelect index: Int, withSegment: Segmenter.Segment, fromIndex: Int, fromSegment: Segmenter.Segment) {
-        print("tapped: \(index), title: \(withSegment.title)")
+//        print("tapped: \(index), title: \(withSegment.title)")
     }
     
 }

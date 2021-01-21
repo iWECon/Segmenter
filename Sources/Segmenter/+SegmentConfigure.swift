@@ -16,7 +16,7 @@ public extension Segmenter {
         public var inactiveColor: UIColor = .gray
         public var inactiveFont: UIFont = .systemFont(ofSize: 16, weight: .regular)
         
-        
+        public var segmentView: (UIView & SegmentViewProvider)?
         
         public init(activeColor: UIColor = .black,
                     inactiveColor: UIColor = .gray,
