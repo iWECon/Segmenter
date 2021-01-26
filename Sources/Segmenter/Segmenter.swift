@@ -28,9 +28,18 @@ public class Segmenter: UIControl {
     /// Even if the default style is configured, it can be configured independently in the Segmenter instance
     public struct Appearance {
         public var segmentSpacing: CGFloat = 15
-        public var contentInset = UIEdgeInsets(top: 0, left: 15, bottom: 6, right: 15)
+        public var contentInset = UIEdgeInsets(top: 10, left: 15, bottom: 6, right: 15)
         public var animateDuration: TimeInterval = 0.34
         public var shadowColor: UIColor = UIColor.black.withAlphaComponent(0.2)
+        
+        /// the gradient color of supplementViewContainer
+        /// supplementaryContainerView 的渐变色
+        ///
+        public var supplementarViewColors: [UIColor] = [UIColor.white, UIColor.white.withAlphaComponent(0)]
+        
+        /// spacing of segment and supplementary between
+        /// segment 和 supplementaryView 之间的距离(最小距离)
+        public var spacingOfSegmentAndSupplementary: CGFloat = 20
         
         /// Spacing between SupplementaryViews
         public var supplementaryViewSpacing: CGFloat = 10
@@ -79,19 +88,25 @@ public class Segmenter: UIControl {
         }
     }
     
-    /// Positive numbers are shifted downward, negative numbers are shifted upward, default is 3
-    /// 附加视图的垂直偏移量，正数向下偏移，负数向上偏移，默认为 3
+    /// Positive numbers are shifted downward, negative numbers are shifted upward, default is 0.
+    /// 附加视图的垂直偏移量，正数向下偏移，负数向上偏移，默认为 0
     @IBInspectable public lazy var supplementaryVerticallyOffset: CGFloat = Self.default.supplementaryVerticallyOffset {
         didSet {
             reloadSupplementaryViews()
         }
     }
     
-    /// Positive numbers are shifted right, negative numbers are shifted, and the default is 3.
-    /// 附加视图的横向偏移量，正数向右偏移，负数向左偏移，默认为 3
+    /// Positive numbers are shifted right, negative numbers are shifted, and the default is 0.
+    /// 附加视图的横向偏移量，正数向右偏移，负数向左偏移，默认为 0
     @IBInspectable public lazy var supplementaryHorizontallyOffset: CGFloat = Self.default.supplementaryHorizontallyOffset {
         didSet {
             reloadSupplementaryViews()
+        }
+    }
+    
+    @IBInspectable public lazy var spacingOfSegmentAndSupplementary: CGFloat = Self.default.spacingOfSegmentAndSupplementary {
+        didSet {
+            layoutSubviews()
         }
     }
     
@@ -107,6 +122,11 @@ public class Segmenter: UIControl {
     
     public var distribution: Distribution = .default {
         didSet {
+            if distribution == .default {
+                supplementaryView.restoreGradientColor()
+            } else {
+                supplementaryView.clearGradientColor()
+            }
             self.layoutSubviews()
         }
     }
@@ -157,15 +177,6 @@ public class Segmenter: UIControl {
             let fromIndex = previousIndex
             let toIndex = currentIndex
             
-            var centeredRect: CGRect?
-            if let to = to {
-                let viewRect = to.convert(to.bounds, to: scrollView)
-                centeredRect = CGRect(x: viewRect.origin.x + viewRect.width / 2 - bounds.width / 2,
-                                      y: viewRect.origin.y + viewRect.height / 2 - bounds.height / 2,
-                                      width: bounds.width,
-                                      height: bounds.height)
-            }
-            
             // do animate
             UIView.animate(withDuration: animateDuration, delay: 0, options: [.allowUserInteraction, .beginFromCurrentState]) {
                 from?.isSelected = false
@@ -189,7 +200,17 @@ public class Segmenter: UIControl {
                 
                 self.layoutSubviews()
                 
-                if let centeredRect = centeredRect {
+                var centeredRect: CGRect?
+                if let to = to {
+                    let viewRect = to.convert(CGRect(x: 0, y: 0, width: to.activeSize.width, height: to.activeSize.height), to: self.scrollView)
+                    let isDefault = self.distribution == .default
+                    let rightMargin = isDefault ? self.spacingOfSegmentAndSupplementary + self.segmentSpacing : 0
+                    centeredRect = CGRect(x: viewRect.origin.x + viewRect.width / 2 - self.bounds.width / 2 + rightMargin,
+                                          y: viewRect.origin.y + viewRect.height / 2 - self.bounds.height / 2,
+                                          width: self.scrollView.frame.width,
+                                          height: self.scrollView.frame.height)
+                }
+                if self.currentIndex != self.previousIndex, let centeredRect = centeredRect {
                     self.scrollView.scrollRectToVisible(centeredRect, animated: false)
                 }
             }
@@ -209,6 +230,19 @@ public class Segmenter: UIControl {
             reloadSupplementaryViews()
         }
     }
+    /// Valid when `distribution == .default`
+    /// supplementaryContainerView's gradient colors
+    /// 附加视图的渐变背景色，颜色从右到左显示，设置颜色从左到右按顺序即可
+    /// 仅当 distribution 为 .default 时生效
+    public lazy var supplementaryViewColors: [UIColor] = Self.default.supplementarViewColors {
+        didSet {
+            guard distribution == .default else {
+                supplementaryView.clearGradientColor()
+                return
+            }
+            supplementaryView.setColors(supplementaryViewColors)
+        }
+    }
     
     // MARK:- Private properties
     private let shadowView = UIView()
@@ -217,8 +251,9 @@ public class Segmenter: UIControl {
     private var previousIndex = -1
     
     private var segmentViews: [UIControl & SegmentViewProvider] = []
+    /// container of supplementaryView
+    private let supplementaryView = SupplementaryContainerView()
     
-    private let supplementaryView = ClickThroughView()
     private var subSupplementaryViewMaps: [Int: [UIView]?] = [:]
     // Int: index, UIView: view, CGFloat: offset of vertically
     private var subSupplementarySubviewsVerticallyOffsetMaps: [VerticallyOffsetMapHashable: CGFloat] = [:]
@@ -261,6 +296,7 @@ public class Segmenter: UIControl {
         addSubview(scrollView)
         
         supplementaryView.backgroundColor = .clear
+        supplementaryView.setColors(supplementaryViewColors)
         addSubview(supplementaryView)
     }
     
@@ -423,7 +459,7 @@ public class Segmenter: UIControl {
                 func setPosition(idx: Int) {
                     if idx == 0 {
                         // right, bottom
-                        supplementSubview.frame.origin = .init(x: supplementaryView.frame.width - supplementSubview.frame.width + supplementaryHorizontallyOffset,
+                        supplementSubview.frame.origin = .init(x: supplementaryView.frame.width - supplementSubview.frame.width + supplementaryHorizontallyOffset - contentInset.right,
                                                                y: supplementaryView.frame.height - supplementSubview.frame.height + supplementaryVerticallyOffset + verticallyOffset)
                     } else {
                         // right, bottom of previous
@@ -463,10 +499,12 @@ public class Segmenter: UIControl {
         super.layoutSubviews()
         
         defer {
-            supplementaryView.frame = .init(x: scrollView.center.x,
-                                            y: scrollView.frame.minY + contentInset.top,
-                                            width: (scrollView.frame.width / 2) - contentInset.right,
-                                            height: scrollView.frame.height - contentInset.vertical)
+            if distribution != .default {
+                supplementaryView.frame = .init(x: scrollView.center.x,
+                                                y: scrollView.frame.minY + contentInset.top,
+                                                width: (scrollView.frame.width / 2),
+                                                height: scrollView.frame.height - contentInset.vertical)
+            }
             
             layoutSupplementaryViewsIfNeeded()
             layoutSubSupplementaryViewsIfNeeded()
@@ -496,15 +534,48 @@ public class Segmenter: UIControl {
             }
         }
         
+        func supplementaryViewLayout(scrollFrame: CGRect) {
+            let scrollViewContentWidth = scrollFrame.maxX + contentInset.right
+            guard !self.isAllOfOne, self.isIndependentControls else {
+                // all of one
+                scrollView.contentSize = .init(width: scrollViewContentWidth, height: scrollFrame.height)
+                scrollContainer.frame = scrollFrame
+                return
+            }
+            // single control
+            guard let map = subSupplementaryViewMaps[currentIndex],
+                  let views = map,
+                  views.count > 0
+            else {
+                supplementaryView.frame = .init(x: frame.width, y: scrollView.frame.minY + contentInset.top, width: 0, height: scrollContainer.frame.height)
+                scrollView.contentSize = .init(width: scrollViewContentWidth, height: scrollFrame.height)
+                scrollContainer.frame = scrollFrame
+                return
+            }
+            
+            var allWidth: CGFloat = contentInset.right;
+            views.forEach({ $0.sizeToFit(); allWidth += ($0.frame.width + segmentSpacing) })
+            allWidth -= segmentSpacing;
+            
+            let offsetWidth: CGFloat = 20
+            supplementaryView.frame = .init(x: frame.width - allWidth - offsetWidth,
+                                            y: scrollView.frame.minY + contentInset.top,
+                                            // 20 偏移量，多出来 20，用来给 scrollView 出现做淡出的
+                                            // 偏移的 20 部分的点击时间会传递到 segmentContainerView 中，已在 hitTest 中处理
+                                            width: allWidth + offsetWidth,
+                                            height: scrollContainer.frame.height)
+            
+            scrollContainer.frame.origin = scrollFrame.origin
+            scrollContainer.frame.size = .init(width: scrollContainer.frame.width + allWidth + spacingOfSegmentAndSupplementary, height: scrollFrame.height)
+            scrollView.contentSize = .init(width: scrollViewContentWidth + allWidth + spacingOfSegmentAndSupplementary, height: scrollView.contentSize.height)
+        }
+        
         switch distribution {
         case .default:
-            scrollFrame.origin.y = contentInset.top
-            scrollFrame.origin.x = contentInset.left
+            scrollFrame.origin = .init(x: contentInset.left, y: contentInset.top)
             scrollFrame.size.height -= contentInset.vertical
-            // width
             scrollFrame.size.width = allItemWidth + allSpacingPx
-            scrollContainer.frame = scrollFrame
-            scrollView.contentSize = .init(width: scrollFrame.maxX + contentInset.right, height: scrollFrame.height)
+            supplementaryViewLayout(scrollFrame: scrollFrame)
             segmentViewLayout()
             
         case .centered:
@@ -572,12 +643,24 @@ public class Segmenter: UIControl {
     }
     
     public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        let containerPoint = convert(point, to: scrollContainer)
-        for subview in scrollContainer.subviews {
-            if subview.frame.inset(by: .init(top: -10, left: -10, bottom: -10, right: -10)).contains(containerPoint) {
-                return subview
+        var responderView = super.hitTest(point, with: event)
+        
+        // supplementaryContainer 加了 20 的宽度偏移量, 用来给超出的 segment 做淡出/入效果, 不需要响应事件
+        if distribution == .default {
+            let f = supplementaryView.frame
+            let supplementaryContainerInvalidFrame = CGRect(x: f.minX, y: f.minY, width: 20, height: f.height)
+            if supplementaryContainerInvalidFrame.contains(point) {
+                responderView = scrollContainer
             }
         }
-        return super.hitTest(point, with: event)
+        if responderView == scrollContainer {
+            let containerPoint = convert(point, to: scrollContainer)
+            for subview in scrollContainer.subviews {
+                if subview.frame.inset(by: .init(top: -10, left: -10, bottom: -10, right: -10)).contains(containerPoint) {
+                    return subview
+                }
+            }
+        }
+        return responderView
     }
 }

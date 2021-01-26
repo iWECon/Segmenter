@@ -55,8 +55,10 @@ class ViewController: UIViewController {
         segmenter.segments = [
             .init(view: v, inactiveView: r, activeSize: CGSize(width: 44, height: 24), inactiveSize: CGSize(width: 34, height: 18.57)),
             .init(image: UIImage(named: "chuanghua")!, inactiveImage: UIImage(named: "chuanghua-2")!, activeSize: CGSize(width: 32, height: 32), inactiveSize: CGSize(width: 24, height: 24)),
-            .init(title: "专辑", supplementaryViews: [.view(print2Button), .view(print3Button, 5)]),
-            .init(title: "歌曲", supplementaryViews: [.view(printButton), .view(print2Button), .view(print3Button)])
+            .init(title: "专辑Album", supplementaryViews: [.view(print2Button), .view(print3Button, 5)]),
+            .init(title: "歌曲Songs", supplementaryViews: [.view(printButton), .view(print2Button), .view(print3Button)]),
+            .init(title: "歌词LRC", supplementaryViews: [.view(printButton), .view(print2Button)]),
+            .init(title: "简介Brief", supplementaryViews: [.view(printButton)]),
         ]
         segmenter.supplementaryVerticallyOffset = 5
         segmenter.distribution = .default
@@ -77,9 +79,9 @@ class ViewController: UIViewController {
         minorCenteredSegmenter.distribution = .centered
         minorCenteredSegmenter.segmentConfigure = .main
         minorCenteredSegmenter.segments = [
-            .init(title: "过去"),
-            .init(title: "现在"),
-            .init(title: "未来"),
+            .init(title: "过去 Event"),
+            .init(title: "现在 Now"),
+            .init(title: "未来 Future"),
         ]
         view.addSubview(minorCenteredSegmenter)
         
@@ -123,7 +125,7 @@ class ViewController: UIViewController {
         
         segmenter.frame.size = .init(width: UIScreen.main.bounds.size.width, height: UIApplication.shared.statusBarFrame.height + 44)
         minorSegmenter.frame = .init(x: 0, y: segmenter.frame.size.height, width: segmenter.frame.width, height: Segmenter.Height)
-        minorCenteredSegmenter.frame = .init(x: 0, y: minorSegmenter.frame.maxY, width: segmenter.frame.width, height: Segmenter.Height)
+        minorCenteredSegmenter.frame = .init(x: 100, y: minorSegmenter.frame.maxY, width: segmenter.frame.width - 200, height: Segmenter.Height)
         aroundEvenedSegmenter.frame = .init(x: 0, y: minorCenteredSegmenter.frame.maxY, width: segmenter.frame.width, height: Segmenter.Height)
         
         button.frame = .init(x: (self.view.frame.width - 80) / 2, y: 400, width: 80, height: 40)

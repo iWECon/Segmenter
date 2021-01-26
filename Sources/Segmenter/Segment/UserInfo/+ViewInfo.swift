@@ -17,6 +17,10 @@ public extension Segmenter.Segment {
             self.activeView = activeView
             self.inactiveView = inactiveView
             
+            // bugfix: tap the custome view not respond
+            activeView.isUserInteractionEnabled = false
+            inactiveView?.isUserInteractionEnabled = false
+            
             self.activeSize = activeSize
             self.inactiveSize = inactiveSize
         }
