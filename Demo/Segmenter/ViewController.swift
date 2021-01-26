@@ -16,49 +16,30 @@ class ViewController: UIViewController {
     
     let button = UIButton()
     
-    let printButton = UIButton(type: .custom)
-    let print2Button = UIButton(type: .custom)
-    let print3Button = UIButton(type: .custom)
-    let print4Button = UIButton(type: .custom)
-
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-//        view.backgroundColor = .magenta
         
-        printButton.setTitle("按钮1", for: .normal)
-        printButton.titleLabel?.font = .systemFont(ofSize: 12, weight: .medium)
-        printButton.setTitleColor(.red, for: .normal)
-        printButton.addTarget(self, action: #selector(printButton(_:)), for: .touchUpInside)
-        
-        print2Button.setTitle("按钮2", for: .normal)
-        print2Button.titleLabel?.font = .systemFont(ofSize: 12, weight: .medium)
-        print2Button.setTitleColor(.blue, for: .normal)
-        print2Button.addTarget(self, action: #selector(printButton(_:)), for: .touchUpInside)
-        
-        print3Button.setTitle("按钮3", for: .normal)
-        print3Button.titleLabel?.font = .systemFont(ofSize: 12, weight: .medium)
-        print3Button.setTitleColor(.red, for: .normal)
-        print3Button.addTarget(self, action: #selector(printButton(_:)), for: .touchUpInside)
-        
-        print4Button.setTitle("按钮4", for: .normal)
-        print4Button.titleLabel?.font = .systemFont(ofSize: 12, weight: .medium)
-        print4Button.setTitleColor(.red, for: .normal)
-        print4Button.addTarget(self, action: #selector(printButton(_:)), for: .touchUpInside)
+        func makeButton(_ title: String, verticallyOffset: CGFloat = 0) -> Segmenter.Segment.SupplementView {
+            let btn = UIButton(type: .custom)
+            btn.setTitle(title, for: .normal)
+            btn.titleLabel?.font = .systemFont(ofSize: 12, weight: .medium)
+            btn.setTitleColor(.systemBlue, for: .normal)
+            return .view(btn, verticallyOffset)
+        }
         
         let v = UIView()
         v.backgroundColor = .red
         let r = UIView()
         r.backgroundColor = .blue
-        
         segmenter.isShadowShouldShow = false
         segmenter.segments = [
-            .init(view: v, inactiveView: r, activeSize: CGSize(width: 44, height: 24), inactiveSize: CGSize(width: 34, height: 18.57), supplementaryViews: [.view(printButton), .view(print2Button), .view(print3Button)]),
-            .init(image: UIImage(named: "chuanghua")!, inactiveImage: UIImage(named: "chuanghua-2")!, activeSize: CGSize(width: 32, height: 32), inactiveSize: CGSize(width: 24, height: 24), supplementaryViews: [.view(printButton), .view(print2Button), .view(print3Button)]),
-            .init(title: "alksdjflkjalsd", supplementaryViews: [.view(print2Button), .view(print3Button, 5)]),
-            .init(title: "歌曲Songs", supplementaryViews: [.view(printButton), .view(print2Button), .view(print3Button)]),
-            .init(title: "歌词LRC", supplementaryViews: [.view(printButton), .view(print2Button)]),
-            .init(title: "简介Brief", supplementaryViews: [.view(printButton)]),
+            .init(view: v, inactiveView: r, activeSize: CGSize(width: 44, height: 24), inactiveSize: CGSize(width: 34, height: 18.57), supplementaryViews: [makeButton("按钮1"), makeButton("按钮2"), makeButton("按钮3")]),
+            .init(image: UIImage(named: "chuanghua")!, inactiveImage: UIImage(named: "chuanghua-2")!, activeSize: CGSize(width: 32, height: 32), inactiveSize: CGSize(width: 24, height: 24), supplementaryViews: [makeButton("按 钮 4"), makeButton("按钮5"), makeButton("按 钮 6")]),
+            .init(title: "歌手 Anchor"),
+            .init(title: "歌曲 Songs", supplementaryViews: [makeButton("黑色毛衣"), makeButton("大笨钟"), makeButton("听妈妈的话")]),
+            .init(title: "歌词 LRC", supplementaryViews: [makeButton("你突然释怀的笑"), makeButton("笑声盘旋半山腰")]),
+            .init(title: "简介 Brief", supplementaryViews: [makeButton("周 杰 伦 简 介")]),
         ]
         segmenter.supplementaryVerticallyOffset = 5
         segmenter.distribution = .default
