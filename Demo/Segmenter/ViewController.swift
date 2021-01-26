@@ -47,8 +47,9 @@ class ViewController: UIViewController {
         view.addSubview(segmenter)
         
         minorSegmenter.isShadowShouldShow = false
-        minorSegmenter.distribution = .evened
+        minorSegmenter.distribution = .default
         minorSegmenter.segmentConfigure = .minor
+        minorSegmenter.supplementaryViews = [makeButton("你好"), makeButton("来了老弟")]
         minorSegmenter.segments = [
             .init(title: "周杰伦,周杰伦,周杰伦"),
             .init(title: "林俊杰,周杰伦"),

@@ -478,7 +478,7 @@ public class Segmenter: UIControl {
         
         for (index, map) in supplementaryViews.enumerated() {
             if index == 0 {
-                map.view.frame.origin = .init(x: supplementaryView.frame.width - map.view.frame.width,
+                map.view.frame.origin = .init(x: supplementaryView.frame.width - map.view.frame.width + supplementaryHorizontallyOffset - contentInset.right,
                                               y: supplementaryView.frame.height - map.view.frame.height + supplementaryVerticallyOffset + map.offset)
             } else {
                 let previousView = supplementaryViews[index - 1].view
