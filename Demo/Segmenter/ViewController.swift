@@ -53,9 +53,9 @@ class ViewController: UIViewController {
         
         segmenter.isShadowShouldShow = false
         segmenter.segments = [
-            .init(view: v, inactiveView: r, activeSize: CGSize(width: 44, height: 24), inactiveSize: CGSize(width: 34, height: 18.57)),
-            .init(image: UIImage(named: "chuanghua")!, inactiveImage: UIImage(named: "chuanghua-2")!, activeSize: CGSize(width: 32, height: 32), inactiveSize: CGSize(width: 24, height: 24)),
-            .init(title: "专辑Album", supplementaryViews: [.view(print2Button), .view(print3Button, 5)]),
+            .init(view: v, inactiveView: r, activeSize: CGSize(width: 44, height: 24), inactiveSize: CGSize(width: 34, height: 18.57), supplementaryViews: [.view(printButton), .view(print2Button), .view(print3Button)]),
+            .init(image: UIImage(named: "chuanghua")!, inactiveImage: UIImage(named: "chuanghua-2")!, activeSize: CGSize(width: 32, height: 32), inactiveSize: CGSize(width: 24, height: 24), supplementaryViews: [.view(printButton), .view(print2Button), .view(print3Button)]),
+            .init(title: "alksdjflkjalsd", supplementaryViews: [.view(print2Button), .view(print3Button, 5)]),
             .init(title: "歌曲Songs", supplementaryViews: [.view(printButton), .view(print2Button), .view(print3Button)]),
             .init(title: "歌词LRC", supplementaryViews: [.view(printButton), .view(print2Button)]),
             .init(title: "简介Brief", supplementaryViews: [.view(printButton)]),

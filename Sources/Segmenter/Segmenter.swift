@@ -497,6 +497,7 @@ public class Segmenter: UIControl {
     
     public override func layoutSubviews() {
         super.layoutSubviews()
+        guard self.frame.height > 0 else { return }
         
         defer {
             if distribution != .default {
@@ -518,8 +519,8 @@ public class Segmenter: UIControl {
         scrollView.frame = .init(x: 0, y: self.frame.height - scrollHeight, width: self.frame.width, height: scrollHeight)
         
         var scrollFrame = scrollView.frame
-        var allItemWidth: CGFloat = 0
-        segmentViews.forEach({ $0.sizeToFit(); allItemWidth += $0.frame.width })
+        var allSegmentsWidth: CGFloat = 0
+        segmentViews.forEach({ $0.sizeToFit(); allSegmentsWidth += $0.frame.width })
         let allSpacingPx: CGFloat = CGFloat(segmentViews.count - 1) * segmentSpacing
         
         // caclculate segment view's layout for `.default` and `.centered`
@@ -536,10 +537,35 @@ public class Segmenter: UIControl {
         
         func supplementaryViewLayout(scrollFrame: CGRect) {
             let scrollViewContentWidth = scrollFrame.maxX + contentInset.right
-            guard !self.isAllOfOne, self.isIndependentControls else {
-                // all of one
+            func empty() {
+                supplementaryView.frame = .init(x: frame.width, y: scrollView.frame.minY + contentInset.top, width: 0, height: scrollContainer.frame.height)
                 scrollView.contentSize = .init(width: scrollViewContentWidth, height: scrollFrame.height)
                 scrollContainer.frame = scrollFrame
+            }
+            
+            func calculatorSupplementaryViewSize(_ views: [UIView]) {
+                var allWidth: CGFloat = contentInset.right;
+                views.forEach({ $0.sizeToFit(); allWidth += ($0.frame.width + segmentSpacing) })
+                allWidth -= segmentSpacing
+                
+                let offsetWidth: CGFloat = 20
+                supplementaryView.frame = .init(x: frame.width - allWidth - offsetWidth,
+                                                y: scrollView.frame.minY + contentInset.top,
+                                                // 20 偏移量，多出来 20，用来给 scrollView 出现做淡出的
+                                                // 偏移的 20 部分的点击时间会传递到 segmentContainerView 中，已在 hitTest 中处理
+                                                width: allWidth + offsetWidth,
+                                                height: scrollFrame.height)
+                scrollContainer.frame = .init(x: scrollFrame.origin.x, y: scrollFrame.minY, width: scrollFrame.width + allWidth + spacingOfSegmentAndSupplementary, height: scrollFrame.height)
+                scrollView.contentSize = .init(width: scrollContainer.frame.maxX, height: scrollFrame.height)
+            }
+            
+            guard !self.isAllOfOne, self.isIndependentControls else {
+                // all of one
+                if supplementaryViews.count > 0 {
+                    calculatorSupplementaryViewSize(supplementaryViews.map({ $0.view }))
+                } else {
+                    empty()
+                }
                 return
             }
             // single control
@@ -547,34 +573,18 @@ public class Segmenter: UIControl {
                   let views = map,
                   views.count > 0
             else {
-                supplementaryView.frame = .init(x: frame.width, y: scrollView.frame.minY + contentInset.top, width: 0, height: scrollContainer.frame.height)
-                scrollView.contentSize = .init(width: scrollViewContentWidth, height: scrollFrame.height)
-                scrollContainer.frame = scrollFrame
+                // single is empty
+                empty()
                 return
             }
-            
-            var allWidth: CGFloat = contentInset.right;
-            views.forEach({ $0.sizeToFit(); allWidth += ($0.frame.width + segmentSpacing) })
-            allWidth -= segmentSpacing;
-            
-            let offsetWidth: CGFloat = 20
-            supplementaryView.frame = .init(x: frame.width - allWidth - offsetWidth,
-                                            y: scrollView.frame.minY + contentInset.top,
-                                            // 20 偏移量，多出来 20，用来给 scrollView 出现做淡出的
-                                            // 偏移的 20 部分的点击时间会传递到 segmentContainerView 中，已在 hitTest 中处理
-                                            width: allWidth + offsetWidth,
-                                            height: scrollContainer.frame.height)
-            
-            scrollContainer.frame.origin = scrollFrame.origin
-            scrollContainer.frame.size = .init(width: scrollContainer.frame.width + allWidth + spacingOfSegmentAndSupplementary, height: scrollFrame.height)
-            scrollView.contentSize = .init(width: scrollViewContentWidth + allWidth + spacingOfSegmentAndSupplementary, height: scrollView.contentSize.height)
+            calculatorSupplementaryViewSize(views)
         }
         
         switch distribution {
         case .default:
             scrollFrame.origin = .init(x: contentInset.left, y: contentInset.top)
             scrollFrame.size.height -= contentInset.vertical
-            scrollFrame.size.width = allItemWidth + allSpacingPx
+            scrollFrame.size.width = allSegmentsWidth + allSpacingPx
             supplementaryViewLayout(scrollFrame: scrollFrame)
             segmentViewLayout()
             
@@ -648,7 +658,7 @@ public class Segmenter: UIControl {
         // supplementaryContainer 加了 20 的宽度偏移量, 用来给超出的 segment 做淡出/入效果, 不需要响应事件
         if distribution == .default {
             let f = supplementaryView.frame
-            let supplementaryContainerInvalidFrame = CGRect(x: f.minX, y: f.minY, width: 20, height: f.height)
+            let supplementaryContainerInvalidFrame = CGRect(x: f.minX, y: f.minY, width: 20 + segmentSpacing, height: f.height)
             if supplementaryContainerInvalidFrame.contains(point) {
                 responderView = scrollContainer
             }

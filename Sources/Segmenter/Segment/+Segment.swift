@@ -73,7 +73,7 @@ public extension Segmenter {
         public init(view: UIView,
                     inactiveView: UIView? = nil, activeSize: CGSize, inactiveSize: CGSize,
                     supplementaryViews: [SupplementView] = [], shadowHidden: Bool = false) {
-            self.init(kind: .view(.init(activeView: view, inactiveView: inactiveView, activeSize: activeSize, inactiveSize: inactiveSize)))
+            self.init(kind: .view(.init(activeView: view, inactiveView: inactiveView, activeSize: activeSize, inactiveSize: inactiveSize)), supplementaryViews: supplementaryViews, shadowHidden: shadowHidden)
         }
         
         public init(custom: (UIControl & SegmentViewProvider).Type, info: SegmentUserInfo,

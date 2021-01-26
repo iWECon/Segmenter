@@ -51,4 +51,13 @@ public class SupplementaryContainerView: UIView, SegmenterSupplementaryContainer
     public func restoreGradientColor() {
         setColors(previousInfo.colors, startPoint: previousInfo.startPoint, endPoint: previousInfo.endPoint)
     }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        guard let gradientLayer = layer as? CAGradientLayer else { return }
+        let fromFloat = Double(min(0.9, 1.0 - (25 / frame.width)))
+        let from = NSNumber(value: fromFloat)
+        gradientLayer.locations = [from, 1.0]
+    }
 }
