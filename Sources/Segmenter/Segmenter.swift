@@ -12,7 +12,7 @@ extension UIEdgeInsets {
     
 }
 
-public protocol SegmenterSelectedDelegate: class {
+public protocol SegmenterSelectedDelegate: AnyObject {
     
     func segmenter(_ segmenter: Segmenter,
                    didSelect index: Int,
