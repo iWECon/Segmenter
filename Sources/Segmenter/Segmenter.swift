@@ -659,7 +659,8 @@ public class Segmenter: UIControl {
         // supplementaryContainer 加了 20 的宽度偏移量, 用来给超出的 segment 做淡出/入效果, 不需要响应事件
         if distribution == .default {
             let f = supplementaryView.frame
-            let supplementaryContainerInvalidFrame = CGRect(x: f.minX, y: f.minY, width: 20 + segmentSpacing, height: f.height)
+            // bugfix: 20 + spacing, remove spacing
+            let supplementaryContainerInvalidFrame = CGRect(x: f.minX, y: f.minY, width: 20, height: f.height)
             if supplementaryContainerInvalidFrame.contains(point) {
                 responderView = scrollContainer
             }
