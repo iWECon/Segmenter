@@ -12,7 +12,7 @@ extension UIEdgeInsets {
     
 }
 
-public protocol SegmenterSelectedDelegate: class {
+public protocol SegmenterSelectedDelegate: AnyObject {
     
     func segmenter(_ segmenter: Segmenter,
                    didSelect index: Int,
@@ -34,7 +34,6 @@ public class Segmenter: UIControl {
         
         /// the gradient color of supplementViewContainer
         /// supplementaryContainerView 的渐变色
-        ///
         public var supplementarViewColors: [UIColor] = [UIColor.white, UIColor.white.withAlphaComponent(0)]
         
         /// spacing of segment and supplementary between
@@ -64,6 +63,19 @@ public class Segmenter: UIControl {
     
     /// use `backgroundView.background` or `backgroundView.set(colors:startPoint:endPoint:locations:)` to set backgroundColor
     public let backgroundView = GradientView()
+    
+    /// override to set backgroundView.backgroundColor
+    public override var backgroundColor: UIColor? {
+        get { backgroundView.backgroundColor }
+        set {
+            backgroundView.backgroundColor = newValue
+            if let color = newValue {
+                supplementaryViewColors = [color, color.withAlphaComponent(0)]
+            } else {
+                supplementaryViewColors = [UIColor.white.withAlphaComponent(0), UIColor.white.withAlphaComponent(0)]
+            }
+        }
+    }
     
     /// some property(left/right) won’t be join calculate when use `.cetered` or `.evened`
     /// default is .init(top: 0, left: 15, bottom: 6, right: 15)
@@ -647,7 +659,8 @@ public class Segmenter: UIControl {
         // supplementaryContainer 加了 20 的宽度偏移量, 用来给超出的 segment 做淡出/入效果, 不需要响应事件
         if distribution == .default {
             let f = supplementaryView.frame
-            let supplementaryContainerInvalidFrame = CGRect(x: f.minX, y: f.minY, width: 20 + segmentSpacing, height: f.height)
+            // bugfix: 20 + spacing, remove spacing
+            let supplementaryContainerInvalidFrame = CGRect(x: f.minX, y: f.minY, width: 20, height: f.height)
             if supplementaryContainerInvalidFrame.contains(point) {
                 responderView = scrollContainer
             }

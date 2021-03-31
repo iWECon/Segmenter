@@ -37,10 +37,11 @@ class ViewController: UIViewController {
             .init(view: v, inactiveView: r, activeSize: CGSize(width: 44, height: 24), inactiveSize: CGSize(width: 34, height: 18.57), supplementaryViews: [makeButton("按钮1"), makeButton("按钮2"), makeButton("按钮3")]),
             .init(image: UIImage(named: "chuanghua")!, inactiveImage: UIImage(named: "chuanghua-2")!, activeSize: CGSize(width: 32, height: 32), inactiveSize: CGSize(width: 24, height: 24), supplementaryViews: [makeButton("按 钮 4"), makeButton("按钮5"), makeButton("按 钮 6")]),
             .init(title: "歌手 Anchor"),
-            .init(title: "歌曲 Songs", supplementaryViews: [makeButton("黑色毛衣"), makeButton("大笨钟"), makeButton("听妈妈的话")]),
+            .init(title: "歌曲 Songs", supplementaryViews: [makeButton("听妈妈的话")]),
             .init(title: "歌词 LRC", supplementaryViews: [makeButton("你突然释怀的笑"), makeButton("笑声盘旋半山腰")]),
             .init(title: "简介 Brief", supplementaryViews: [makeButton("周 杰 伦 简 介")]),
         ]
+        segmenter.backgroundColor = .white
         segmenter.supplementaryVerticallyOffset = 5
         segmenter.distribution = .default
         segmenter.delegate = self
