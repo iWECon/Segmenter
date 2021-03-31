@@ -587,7 +587,7 @@ public class Segmenter: UIControl {
             scrollFrame.origin.x = max(0, centerX)
             scrollFrame.origin.y = contentInset.top
             scrollFrame.size.height -= contentInset.vertical
-            scrollFrame.size.width = scrollFrame.origin.x == 0 ? w + centerX : w
+            scrollFrame.size.width = scrollFrame.origin.x == 0 ? w + abs(centerX) : w
             scrollContainer.frame = scrollFrame
             scrollView.contentSize = .init(width: w, height: scrollFrame.height)
             segmentViewLayout()
