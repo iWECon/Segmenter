@@ -27,7 +27,7 @@
 		08D1BCDC26329C0400967F1B /* +SegmentConfigure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D1BCCC26329C0400967F1B /* +SegmentConfigure.swift */; };
 		08D1BCDD26329C0400967F1B /* +Distribution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D1BCCD26329C0400967F1B /* +Distribution.swift */; };
 		08D1BCDE26329C0400967F1B /* Segmentedable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D1BCCE26329C0400967F1B /* Segmentedable.swift */; };
-		08D1BCDF26329C0400967F1B /* +GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D1BCCF26329C0400967F1B /* +GradientView.swift */; };
+		08D1BCDF26329C0400967F1B /* SegmenterGradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D1BCCF26329C0400967F1B /* SegmenterGradientView.swift */; };
 		08D1BCE026329C0400967F1B /* Segmenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D1BCD026329C0400967F1B /* Segmenter.swift */; };
 /* End PBXBuildFile section */
 
@@ -54,7 +54,7 @@
 		08D1BCCC26329C0400967F1B /* +SegmentConfigure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "+SegmentConfigure.swift"; sourceTree = "<group>"; };
 		08D1BCCD26329C0400967F1B /* +Distribution.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "+Distribution.swift"; sourceTree = "<group>"; };
 		08D1BCCE26329C0400967F1B /* Segmentedable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Segmentedable.swift; sourceTree = "<group>"; };
-		08D1BCCF26329C0400967F1B /* +GradientView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "+GradientView.swift"; sourceTree = "<group>"; };
+		08D1BCCF26329C0400967F1B /* SegmenterGradientView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmenterGradientView.swift; sourceTree = "<group>"; };
 		08D1BCD026329C0400967F1B /* Segmenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Segmenter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -118,7 +118,7 @@
 				08D1BCCC26329C0400967F1B /* +SegmentConfigure.swift */,
 				08D1BCCD26329C0400967F1B /* +Distribution.swift */,
 				08D1BCCE26329C0400967F1B /* Segmentedable.swift */,
-				08D1BCCF26329C0400967F1B /* +GradientView.swift */,
+				08D1BCCF26329C0400967F1B /* SegmenterGradientView.swift */,
 				08D1BCD026329C0400967F1B /* Segmenter.swift */,
 			);
 			path = Segmenter;
@@ -243,7 +243,7 @@
 				08D1BCDA26329C0400967F1B /* +Segment+View.swift in Sources */,
 				08D1BCDC26329C0400967F1B /* +SegmentConfigure.swift in Sources */,
 				08D1BCDE26329C0400967F1B /* Segmentedable.swift in Sources */,
-				08D1BCDF26329C0400967F1B /* +GradientView.swift in Sources */,
+				08D1BCDF26329C0400967F1B /* SegmenterGradientView.swift in Sources */,
 				08D1BCD226329C0400967F1B /* +Segment.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -62,7 +62,7 @@ public class Segmenter: UIControl {
     }
     
     /// use `backgroundView.background` or `backgroundView.set(colors:startPoint:endPoint:locations:)` to set backgroundColor
-    public let backgroundView = GradientView()
+    public let backgroundView = SegmenterGradientView()
     
     /// override to set backgroundView.backgroundColor
     public override var backgroundColor: UIColor? {
