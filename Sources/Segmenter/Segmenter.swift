@@ -146,7 +146,7 @@ public class Segmenter: UIControl {
     public var isShadowHidden: Bool = false {
         didSet {
             var shouldContinue = true
-            if segments.count > 0, segments[currentIndex].isShouldHideShadow {
+            if segments.count > 0, currentIndex <= segments.count - 1, segments[currentIndex].isShouldHideShadow {
                 shouldContinue = false
             }
             
