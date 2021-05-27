@@ -54,9 +54,6 @@ extension Segmenter.Segment {
             inactiveLabel.frame.size
         }
         
-        var activeMaxWidth: CGFloat = -1
-        var inactiveMaxWidth: CGFloat = -1
-        
         override func sizeThatFits(_ size: CGSize) -> CGSize {
             invalidateIntrinsicContentSize()
             layoutIfNeeded()

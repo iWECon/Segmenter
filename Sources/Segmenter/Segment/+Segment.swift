@@ -56,7 +56,8 @@ public extension Segmenter {
             self.supplementaryViews = supplementaryViews
         }
         
-        // convenience init
+        // MARK: convenience init
+        /// for default label
         public init(title: String,
                     supplementaryViews: [SupplementView] = [], shadowHidden: Bool = false,
                     activeFont: UIFont? = nil, activeColor: UIColor? = nil,
@@ -64,18 +65,21 @@ public extension Segmenter {
             self.init(kind: .label(.init(title: title, activeFont: activeFont, activeColor: activeColor, inactiveFont: inactiveFont, inactiveColor: inactiveColor)), supplementaryViews: supplementaryViews, shadowHidden: shadowHidden)
         }
         
+        /// for custom image
         public init(image: UIImage,
                     inactiveImage: UIImage? = nil, activeSize: CGSize, inactiveSize: CGSize,
                     supplementaryViews: [SupplementView] = [], shadowHidden: Bool = false) {
             self.init(kind: .image(.init(activeImage: image, inacitveImage: inactiveImage, activeSize: activeSize, inactiveSize: inactiveSize)), supplementaryViews: supplementaryViews, shadowHidden: shadowHidden)
         }
         
+        /// for custom view
         public init(view: UIView,
                     inactiveView: UIView? = nil, activeSize: CGSize, inactiveSize: CGSize,
                     supplementaryViews: [SupplementView] = [], shadowHidden: Bool = false) {
             self.init(kind: .view(.init(activeView: view, inactiveView: inactiveView, activeSize: activeSize, inactiveSize: inactiveSize)), supplementaryViews: supplementaryViews, shadowHidden: shadowHidden)
         }
         
+        /// for custom view with (UIControl & SegmentViewProvider)
         public init(custom: (UIControl & SegmentViewProvider).Type, info: SegmentUserInfo,
                     supplementaryViews: [SupplementView] = [], shadowHidden: Bool = false) {
             self.init(kind: .custom(info, type: custom))

@@ -112,14 +112,14 @@
 		08D1BCBD26329C0400967F1B /* Segmenter */ = {
 			isa = PBXGroup;
 			children = (
-				08D1BCBE26329C0400967F1B /* +VerticallyOffsetMapHashable.swift */,
-				08D1BCBF26329C0400967F1B /* Segment */,
-				08D1BCCB26329C0400967F1B /* +SupplementaryContainerView.swift */,
-				08D1BCCC26329C0400967F1B /* +SegmentConfigure.swift */,
 				08D1BCCD26329C0400967F1B /* +Distribution.swift */,
+				08D1BCCC26329C0400967F1B /* +SegmentConfigure.swift */,
+				08D1BCCB26329C0400967F1B /* +SupplementaryContainerView.swift */,
+				08D1BCBE26329C0400967F1B /* +VerticallyOffsetMapHashable.swift */,
 				08D1BCCE26329C0400967F1B /* Segmentedable.swift */,
-				08D1BCCF26329C0400967F1B /* SegmenterGradientView.swift */,
 				08D1BCD026329C0400967F1B /* Segmenter.swift */,
+				08D1BCCF26329C0400967F1B /* SegmenterGradientView.swift */,
+				08D1BCBF26329C0400967F1B /* Segment */,
 			);
 			path = Segmenter;
 			sourceTree = "<group>";

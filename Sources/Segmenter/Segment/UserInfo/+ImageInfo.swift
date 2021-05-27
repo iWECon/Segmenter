@@ -4,7 +4,6 @@
 
 import UIKit
 
-// MARK:- ImageInfo
 public extension Segmenter.Segment {
     
     class ImageInfo: SegmentUserInfo {

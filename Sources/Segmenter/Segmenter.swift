@@ -79,13 +79,17 @@ public class Segmenter: UIControl {
     
     /// some property(left/right) won’t be join calculate when use `.cetered` or `.evened`
     /// default is .init(top: 0, left: 15, bottom: 6, right: 15)
+    ///
+    /// 当 `distribution` 为 `.centered` or `.evened` 时，其 `left` 和 `right` 在计算位置时会被忽略
     @IBInspectable public lazy var contentInset: UIEdgeInsets = Self.default.contentInset {
         didSet {
             layoutSubviews()
         }
     }
     
-    /// won't be join calculate when use `.evened` and `.aroundEvened`, default is 15
+    /// won't be join calculate when use `.evened` or `.aroundEvened`, default is 15
+    ///
+    /// segment 间距，当 `distribution` 为 `.evened` 或 `.aroundEvened` 在计算位置时会被忽略, 默认值为 15
     @IBInspectable public lazy var segmentSpacing: CGFloat = Self.default.segmentSpacing {
         didSet {
             layoutSubviews()
@@ -93,6 +97,7 @@ public class Segmenter: UIControl {
     }
     
     /// default is 10
+    ///
     /// 附加视图之间的间距
     @IBInspectable public lazy var supplementaryViewSpacing: CGFloat = Self.default.supplementaryViewSpacing {
         didSet {
@@ -101,6 +106,7 @@ public class Segmenter: UIControl {
     }
     
     /// Positive numbers are shifted downward, negative numbers are shifted upward, default is 0.
+    ///
     /// 附加视图的垂直偏移量，正数向下偏移，负数向上偏移，默认为 0
     @IBInspectable public lazy var supplementaryVerticallyOffset: CGFloat = Self.default.supplementaryVerticallyOffset {
         didSet {
@@ -109,6 +115,7 @@ public class Segmenter: UIControl {
     }
     
     /// Positive numbers are shifted right, negative numbers are shifted, and the default is 0.
+    ///
     /// 附加视图的横向偏移量，正数向右偏移，负数向左偏移，默认为 0
     @IBInspectable public lazy var supplementaryHorizontallyOffset: CGFloat = Self.default.supplementaryHorizontallyOffset {
         didSet {
@@ -116,6 +123,7 @@ public class Segmenter: UIControl {
         }
     }
     
+    /// segment 与附加视图之间的距离
     @IBInspectable public lazy var spacingOfSegmentAndSupplementary: CGFloat = Self.default.spacingOfSegmentAndSupplementary {
         didSet {
             layoutSubviews()
@@ -123,9 +131,13 @@ public class Segmenter: UIControl {
     }
     
     /// animate duration of segmented change, default is 0.34
+    ///
+    /// 动画持续事件，默认为 0.34
     @IBInspectable public lazy var animateDuration: TimeInterval = Self.default.animateDuration
     
     /// default is UIColor.black.withAlphaComponent(0.2)
+    ///
+    /// 阴影颜色，默认为 UIColor.black.withAlphaComponent(0.2)
     @IBInspectable public lazy var shadowShadowColor: UIColor = Self.default.shadowColor {
         didSet {
             shadowView.subviews.first?.layer.shadowColor = shadowShadowColor.cgColor

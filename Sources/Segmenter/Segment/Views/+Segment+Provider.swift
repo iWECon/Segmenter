@@ -14,4 +14,3 @@ public protocol SegmentViewProvider {
     func layoutSubviews()
     func sizeThatFits(_ size: CGSize) -> CGSize
 }
-
