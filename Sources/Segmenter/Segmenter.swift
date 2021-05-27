@@ -275,9 +275,8 @@ public class Segmenter: UIControl {
     
     /// 替换 segment
     public func replaceSegment(_ segment: Segment, at index: Int) {
-        segments.remove(at: index)
-        segments.insert(segment, at: index)
-        reloadSegments()
+        // it will calling didSet, so do not manual to call `reloadSegments()`
+        segments.replaceSubrange(.init(index ... index), with: [segment])
     }
     
     // MARK:- Private properties
