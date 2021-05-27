@@ -268,6 +268,18 @@ public class Segmenter: UIControl {
         }
     }
     
+    /// 获取视图
+    public func getSegmentView(at index: Int) -> UIControl & SegmentViewProvider {
+        segmentViews[index]
+    }
+    
+    /// 替换 segment
+    public func replaceSegment(_ segment: Segment, at index: Int) {
+        segments.remove(at: index)
+        segments.insert(segment, at: index)
+        reloadSegments()
+    }
+    
     // MARK:- Private properties
     private let shadowView = UIView()
     private let scrollView = UIScrollView()
