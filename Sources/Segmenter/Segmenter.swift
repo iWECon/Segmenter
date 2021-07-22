@@ -268,15 +268,29 @@ public class Segmenter: UIControl {
         }
     }
     
-    /// 获取视图
-    public func getSegmentView(at index: Int) -> UIControl & SegmentViewProvider {
+    /// 获取 segment
+    public func getSegment(at index: Int) -> UIControl & SegmentViewProvider {
         segmentViews[index]
     }
     
     /// 替换 segment
+    /// 会自动调用 `reloadSegments()`
     public func replaceSegment(_ segment: Segment, at index: Int) {
         // it will calling didSet, so do not manual to call `reloadSegments()`
         segments.replaceSubrange(.init(index ... index), with: [segment])
+    }
+    
+    /// 删除 segment
+    /// 会自动调用 `reloadSegments()`
+    public func deleteSegment(at index: Int) {
+        // it will calling didSet, so do not manual to call `reloadSegments()`
+        segments.remove(at: index)
+    }
+    
+    /// 添加 segment
+    /// 会自动调用 `reloadSegments()`
+    public func insertSegment(_ segment: Segment, at index: Int) {
+        segments.insert(segment, at: index)
     }
     
     // MARK:- Private properties
@@ -417,9 +431,6 @@ public class Segmenter: UIControl {
         }
         if view.frame == .zero {
             view.frame.size = view.intrinsicContentSize
-        }
-        if view.frame == .zero {
-            fatalError("the view's frame is zero.")
         }
     }
     

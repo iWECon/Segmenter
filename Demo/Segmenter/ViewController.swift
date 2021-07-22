@@ -106,7 +106,15 @@ class ViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        segmenter.frame.size = .init(width: UIScreen.main.bounds.size.width, height: UIApplication.shared.statusBarFrame.height + 44)
+        if #available(iOS 13.0, *) {
+            if let keyWindow = UIApplication.shared.windows.filter({ $0.isKeyWindow }).first,
+               let statusBarHeight = keyWindow.windowScene?.statusBarManager?.statusBarFrame.height
+            {
+                segmenter.frame.size = .init(width: UIScreen.main.bounds.size.width, height: statusBarHeight + 44)
+            }
+        } else {
+            segmenter.frame.size = .init(width: UIScreen.main.bounds.size.width, height: UIApplication.shared.statusBarFrame.height + 44)
+        }
         minorSegmenter.frame = .init(x: 0, y: segmenter.frame.size.height, width: segmenter.frame.width, height: Segmenter.Height)
         minorCenteredSegmenter.frame = .init(x: 100, y: minorSegmenter.frame.maxY, width: segmenter.frame.width - 200, height: Segmenter.Height)
         aroundEvenedSegmenter.frame = .init(x: 0, y: minorCenteredSegmenter.frame.maxY, width: segmenter.frame.width, height: Segmenter.Height)
