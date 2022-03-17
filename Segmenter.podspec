@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
     s.name = 'Segmenter'
-    s.version = '1.5.8'
+    s.version = '1.5.9'
     s.license = { :type => 'MIT' }
     s.homepage = 'https://github.com/iWECon/Segmenter'
     s.authors = 'iWw'
