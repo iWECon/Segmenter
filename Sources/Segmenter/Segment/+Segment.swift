@@ -17,7 +17,7 @@ public extension Segmenter {
             case view(_ info: ViewInfo)
             case custom(_ info: SegmentUserInfo, type: (UIControl & SegmentViewProvider).Type)
             
-            var userInfo: SegmentUserInfo {
+            public var userInfo: SegmentUserInfo {
                 switch self {
                 case .label(let info):
                     return info
@@ -30,7 +30,7 @@ public extension Segmenter {
                 }
             }
             
-            var segmentViewType: (UIControl & SegmentViewProvider).Type {
+            public var segmentViewType: (UIControl & SegmentViewProvider).Type {
                 switch self {
                 case .label:
                     return Segment.Label.self
