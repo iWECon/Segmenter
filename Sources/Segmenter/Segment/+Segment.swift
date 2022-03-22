@@ -82,7 +82,7 @@ public extension Segmenter {
         /// for custom view with (UIControl & SegmentViewProvider)
         public init(custom: (UIControl & SegmentViewProvider).Type, info: SegmentUserInfo,
                     supplementaryViews: [SupplementView] = [], shadowHidden: Bool = false) {
-            self.init(kind: .custom(info, type: custom))
+            self.init(kind: .custom(info, type: custom), supplementaryViews: supplementaryViews, shadowHidden: shadowHidden)
         }
     }
     
