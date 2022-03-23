@@ -22,7 +22,7 @@ public protocol SegmenterSelectedDelegate: AnyObject {
     
 }
 
-public class Segmenter: UIControl {
+public final class Segmenter: UIControl {
     
     /// The style here is the overall default style, and the configuration information is taken from here if the Segmenter is not configured as follows after initialization
     /// Even if the default style is configured, it can be configured independently in the Segmenter instance
@@ -48,7 +48,9 @@ public class Segmenter: UIControl {
         public var supplementaryHorizontallyOffset: CGFloat = 0
         
         /// SupplementaryViews transition animation
-        public var supplementaryTransitionAnimation: SupplementaryTransitionProvider = DefaultSupplementaryTransition()
+        public var supplementaryTransitionAnimation: SupplementaryViewsTransitionProvider = DefaultSupplementaryViewsTransition()
+        /// This effect is triggered when moving to new Segment without any supplementary views.
+        public var supplementaryViewTransition: Segmenter.SupplementaryViewTransition = .default
     }
     public static var `default` = Appearance()
     
@@ -59,7 +61,16 @@ public class Segmenter: UIControl {
     public weak var delegate: SegmenterSelectedDelegate?
     
     /// SupplementaryViews transition animation delegate
-    public var supplementaryTransitionAnimation: SupplementaryTransitionProvider = Segmenter.default.supplementaryTransitionAnimation
+    public var supplementaryTransitionAnimation: SupplementaryViewsTransitionProvider = Segmenter.default.supplementaryTransitionAnimation
+    
+    public enum SupplementaryViewTransition {
+        /// Default is move to new frame
+        case `default`
+        /// Fade right now (without move to new frame)
+        case fade
+    }
+    /// This effect is triggered when moving to new Segment without any supplementary views.
+    public var supplementaryViewTransition: SupplementaryViewTransition = Segmenter.default.supplementaryViewTransition
     
     @IBInspectable public var isShadowShouldShow = true {
         didSet {
@@ -581,13 +592,19 @@ public class Segmenter: UIControl {
         func supplementaryViewLayout(scrollFrame: CGRect) {
             let scrollViewContentWidth = scrollFrame.maxX + contentInset.right
             func empty() {
-                supplementaryView.frame = .init(x: frame.width, y: scrollView.frame.minY + contentInset.top, width: 0, height: scrollContainer.frame.height)
+                switch supplementaryViewTransition {
+                case .`default`:
+                    supplementaryView.frame = .init(x: frame.width, y: scrollView.frame.minY + contentInset.top, width: 0, height: scrollContainer.frame.height)
+                case .fade:
+                    supplementaryView.alpha = 0
+                }
                 scrollView.contentSize = .init(width: scrollViewContentWidth, height: scrollFrame.height)
                 scrollContainer.frame = scrollFrame
             }
             
             func calculatorSupplementaryViewSize(_ views: [UIView]) {
                 let offsetWidth: CGFloat = 20
+                supplementaryView.alpha = 1
                 supplementaryView.frame = .init(x: frame.width - currentSupplementaryViewsWidthWithSpacing - offsetWidth,
                                                 y: scrollView.frame.minY + contentInset.top,
                                                 // 20 偏移量，多出来 20，用来给 scrollView 出现做淡出的
