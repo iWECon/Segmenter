@@ -48,7 +48,7 @@ public class Segmenter: UIControl {
         public var supplementaryHorizontallyOffset: CGFloat = 0
         
         /// SupplementaryViews transition animation
-        public var supplementaryTransitionAnimation: SupplementaryTransitionProvider = FadePopSupplementaryTransition()
+        public var supplementaryTransitionAnimation: SupplementaryTransitionProvider = DefaultSupplementaryTransition()
     }
     public static var `default` = Appearance()
     
