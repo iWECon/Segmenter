@@ -34,12 +34,12 @@ public extension Segmenter {
         
         public func setColors(_ colors: [UIColor], startPoint: CGPoint = .init(x: 1, y: 0.5), endPoint: CGPoint = .init(x: 0, y: 0.5)) {
             guard let gradientLayer = layer as? CAGradientLayer else { return }
-            gradientLayer.colors = colors.count > 0 ? colors.map({ $0.cgColor }) : nil
+            gradientLayer.colors = !colors.isEmpty ? colors.map({ $0.cgColor }) : nil
             gradientLayer.startPoint = startPoint
             gradientLayer.endPoint = endPoint
             gradientLayer.locations = [0.8, 1.0]
             
-            guard colors.count > 0 else { return }
+            guard !colors.isEmpty else { return }
             previousInfo = (colors, startPoint, endPoint)
         }
         
@@ -57,7 +57,7 @@ public extension Segmenter {
         public override func layoutSubviews() {
             super.layoutSubviews()
             
-            guard let gradientLayer = layer as? CAGradientLayer else { return }
+            guard !frame.width.isZero, let gradientLayer = layer as? CAGradientLayer else { return }
             let fromFloat = Double(min(0.9, 1.0 - (25 / frame.width)))
             let from = NSNumber(value: fromFloat)
             gradientLayer.locations = [from, 1.0]
