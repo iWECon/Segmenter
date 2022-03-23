@@ -46,6 +46,9 @@ public class Segmenter: UIControl {
         public var supplementaryVerticallyOffset: CGFloat = 0
         /// SupplementaryViews are shifted horizontally as a whole, with positive numbers to the right and negative numbers to the left
         public var supplementaryHorizontallyOffset: CGFloat = 0
+        
+        /// SupplementaryViews transition animation
+        public var supplementaryTransitionAnimation: SupplementaryTransitionProvider = FadePopSupplementaryTransition()
     }
     public static var `default` = Appearance()
     
@@ -54,6 +57,9 @@ public class Segmenter: UIControl {
     
     // MARK: - Custom properties
     public weak var delegate: SegmenterSelectedDelegate?
+    
+    /// SupplementaryViews transition animation delegate
+    public var supplementaryTransitionAnimation: SupplementaryTransitionProvider = Segmenter.default.supplementaryTransitionAnimation
     
     @IBInspectable public var isShadowShouldShow = true {
         didSet {
@@ -206,7 +212,9 @@ public class Segmenter: UIControl {
                 from?.isSelected = false
                 to?.isSelected = true
                 
-                if !self.isAllOfOne, self.isIndependentControls {
+                let shouldTransitionSupplementaryViews: Bool = !self.isAllOfOne && self.isIndependentControls
+                
+                if shouldTransitionSupplementaryViews {
                     // make supplementary view to visiable
                     let fromSupViews = (self.subSupplementaryViewMaps[fromIndex] ?? []) ?? []
                     let toSupViews = (self.subSupplementaryViewMaps[toIndex] ?? []) ?? []
@@ -214,12 +222,11 @@ public class Segmenter: UIControl {
                     let fromContains = fromSupViews.filter({ toSupViews.contains($0) })
                     let fromUnContains = fromSupViews.filter({ !toSupViews.contains($0) })
                     
-                    func makeView(view: UIView, show: Bool) {
-                        view.transform = show ? .identity : .init(translationX: 10, y: 0)
-                        view.alpha = show ? 1 : 0
-                    }
-                    fromUnContains.forEach({ makeView(view: $0, show: false) })
-                    (fromContains + toSupViews).forEach({ makeView(view: $0, show: true) })
+                    self.supplementaryTransitionAnimation
+                        .transition(
+                            invisibleViews: fromUnContains,
+                            visibleViews: (fromContains + toSupViews)
+                        )
                 }
                 
                 self.layoutSubviews()
@@ -293,7 +300,7 @@ public class Segmenter: UIControl {
         segments.insert(segment, at: index)
     }
     
-    // MARK:- Private properties
+    // MARK: - Private properties
     private let shadowView = UIView()
     private let scrollView = UIScrollView()
     private let scrollContainer = UIView()
@@ -474,7 +481,7 @@ public class Segmenter: UIControl {
         (subSupplementaryViewMaps[currentIndex] ?? [])?.forEach({ $0.alpha = 1 })
     }
     
-    // MARK:- segment view's tap action
+    // MARK: segment view's tap action
     @objc private func segmentViewTapAction(_ sender: UIControl) {
         let fromIndex = self.segmentViews.enumerated().first(where: { $0.element.isSelected })?.offset ?? 0
         let segmentViewEnumerated = self.segmentViews.enumerated().first(where: { $0.element == sender })
@@ -711,16 +718,16 @@ public class Segmenter: UIControl {
     }
 }
 
-// MARK:- Helper
+// MARK: - Helper
 private extension Segmenter {
     
     /// 是否设置的主视图的附加视图（所有的分页附加视图都相同）
     var isAllOfOne: Bool {
-        supplementaryViews.count > 0
+        !supplementaryViews.isEmpty
     }
     /// 是否设置的单独的附加视图（每个分页的附加视图不同）
     var isIndependentControls: Bool {
-        segments.filter({ $0.supplementaryViews.count > 0 }).count > 0
+        !segments.filter({ !$0.supplementaryViews.isEmpty }).isEmpty
     }
     
     /// all segments width without segmentSpacing
