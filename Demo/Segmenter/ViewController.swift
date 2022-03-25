@@ -45,6 +45,7 @@ class ViewController: UIViewController {
         r.backgroundColor = .blue
         segmenter.isShadowShouldShow = false
         segmenter.segments = [
+            Segment(custom: <#T##SegmentInfoProvider#>)
             .init(view: v, inactiveView: r, activeSize: CGSize(width: 44, height: 24), inactiveSize: CGSize(width: 34, height: 18.57), supplementaryViews: [makeButton("按钮1"), makeButton("按钮2"), makeButton("按钮3")]),
             .init(image: UIImage(named: "chuanghua")!, inactiveImage: UIImage(named: "chuanghua-2")!, activeSize: CGSize(width: 32, height: 32), inactiveSize: CGSize(width: 24, height: 24), supplementaryViews: [makeButton("按 钮 4"), makeButton("按钮5"), makeButton("按 钮 6")]),
             .init(title: "歌手 Anchor"),

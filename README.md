@@ -2,6 +2,44 @@
 
 ![Preview](Demo/shot.gif)
 
+## 用法
+
+```swift
+let segmenter = Segmenter()
+
+// 是否需要显示阴影
+segmenter.isShadowShouldShow = false
+// 附加视图的间距
+segmenter.supplementaryVerticallyOffset = 5
+
+// 样式, 有 3 种： default, centered, evened, aroundEvent
+// 见：+Distribution.swift -> enum Distribution: Int
+segmenter.distribution = .default
+
+// segment 点击委托
+segmenter.delegate = self
+
+// 配置视图
+segmenter.segments = [
+    // 显示 view, activeSize 选中时的大小，inactiveSize: 未选中大小
+    Segment(view: UIView(), activeSize: CGSize.zero, inactiveSize: CGSize.zero),
+    
+    // 显示 image 
+    Segment(image: UIImage(), activeSize: CGSize.zero, inactiveSize: CGSize.zero)
+    
+    // 显示 label, 可配置文本字体大小
+    Segment(title: "Label")
+    // 完整的 title 初始化
+    // Segment(title: "Label", supplementaryViews: [SupplementView], shadowHidden: false, activeFont: UIFont, activeColor: UIColor, inactiveFont: UIFont, inactiveColor: UIColor)
+    
+    // 显示自定义的 View, 自定义 View 需要实现 SegmentView 协议 (UIControl + SegmentViewProvider)
+    // 每个 View 对应一个 SegmentInfoProvider
+    // 实现 SegmentInfoProvider 后, 传入 SegmentInfoProvider 协议即可
+    // 可参考 +Segment+Image.swift / +Segment+Label.swift / +Segment+View.swift
+    Segment(custom: SegmentInfoProvider)
+]
+```
+
 
 ## Demo
 
@@ -21,35 +59,9 @@ Download the project and then open `Demo/Segmenter.xcodeproj`
 · segments 长度超出范围时可滚动显示，对 SupplementaryView 做了优化/适配
 
 · 支持全局配置默认属性，可被实例自定义配置覆盖
+
 ```swift
-/// `提供  `default`  静态属性，可配置的属性，配置后全局生效，单个实例重写对应的属性时，会覆盖全局配置`
-///
-///  Segmenter.default.xxxx
-
-
-/// The style here is the overall default style, and the configuration information is taken from here if the Segmenter is not configured as follows after initialization
-/// Even if the default style is configured, it can be configured independently in the Segmenter instance
-public struct Appearance {
-    public var segmentSpacing: CGFloat = 15
-    public var contentInset = UIEdgeInsets(top: 10, left: 15, bottom: 6, right: 15)
-    public var animateDuration: TimeInterval = 0.34
-    public var shadowColor: UIColor = UIColor.black.withAlphaComponent(0.2)
-
-    /// the gradient color of supplementViewContainer
-    /// supplementaryContainerView 的渐变色
-    public var supplementarViewColors: [UIColor] = [UIColor.white, UIColor.white.withAlphaComponent(0)]
-
-    /// spacing of segment and supplementary between
-    /// segment 和 supplementaryView 之间的距离(最小距离)
-    public var spacingOfSegmentAndSupplementary: CGFloat = 20
-
-    /// Spacing between SupplementaryViews
-    public var supplementaryViewSpacing: CGFloat = 10
-    /// SupplementaryViews are shifted vertically as a whole, positive numbers down, negative numbers up
-    public var supplementaryVerticallyOffset: CGFloat = 0
-    /// SupplementaryViews are shifted horizontally as a whole, with positive numbers to the right and negative numbers to the left
-    public var supplementaryHorizontallyOffset: CGFloat = 0
-}
+// 参考
 public static var `default` = Appearance()
 ```
 
@@ -57,4 +69,4 @@ public static var `default` = Appearance()
 ## Installation
 
 #### Swift Package Manager
-`.package(url: https://github.com/iWECon/Segmenter", from: "1.0.0")`
+`.package(url: https://github.com/iWECon/Segmenter", from: "2.0.0")`
