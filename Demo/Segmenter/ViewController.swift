@@ -16,11 +16,22 @@ class ViewController: UIViewController {
     
     let button = UIButton()
     
+    private func makeMainSegment(title: String) -> Segment {
+        Segment(title: title)
+    }
+    private func makeMinorSegment(title: String) -> Segment {
+        Segment(
+            title: title,
+            activeFont: UIFont.systemFont(ofSize: 12, weight: .medium),
+            inactiveFont: UIFont.systemFont(ofSize: 12, weight: .regular)
+        )
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        func makeButton(_ title: String, verticallyOffset: CGFloat = 0) -> Segmenter.Segment.SupplementView {
+        func makeButton(_ title: String, verticallyOffset: CGFloat = 0) -> Segment.SupplementView {
             let btn = UIButton(type: .custom)
             btn.setTitle(title, for: .normal)
             btn.titleLabel?.font = .systemFont(ofSize: 12, weight: .medium)
@@ -48,32 +59,28 @@ class ViewController: UIViewController {
         view.addSubview(segmenter)
         
         minorSegmenter.isShadowShouldShow = false
-        minorSegmenter.distribution = .default
-        minorSegmenter.segmentConfigure = .minor
-        minorSegmenter.supplementaryViews = [makeButton("你好"), makeButton("来了老弟")]
+        minorSegmenter.distribution = .evened
         minorSegmenter.segments = [
-            .init(title: "周杰伦,周杰伦,周杰伦"),
-            .init(title: "林俊杰,周杰伦"),
-            .init(title: "胡彦斌,周杰伦"),
+            makeMinorSegment(title: "周杰伦,周杰伦,周杰伦"),
+            makeMinorSegment(title: "林俊杰,周杰伦"),
+            makeMinorSegment(title: "胡彦斌,周杰伦")
         ]
         view.addSubview(minorSegmenter)
         
         minorCenteredSegmenter.backgroundView.backgroundColor = .clear
         minorCenteredSegmenter.distribution = .centered
-        minorCenteredSegmenter.segmentConfigure = .main
         minorCenteredSegmenter.segments = [
-            .init(title: "过去 Event"),
-            .init(title: "现在 Now"),
-            .init(title: "未来 Future"),
+            makeMainSegment(title: "过去 Event"),
+            makeMainSegment(title: "现在 Now"),
+            makeMainSegment(title: "未来 Future"),
         ]
         view.addSubview(minorCenteredSegmenter)
         
         aroundEvenedSegmenter.distribution = .aroundEvened
-        aroundEvenedSegmenter.segmentConfigure = .minor
         aroundEvenedSegmenter.segments = [
-            .init(title: "周杰伦"),
-            .init(title: "林俊杰"),
-            .init(title: "胡彦斌")
+            makeMinorSegment(title: "周杰伦"),
+            makeMinorSegment(title: "林俊杰"),
+            makeMinorSegment(title: "胡彦斌")
         ]
         view.addSubview(aroundEvenedSegmenter)
         
@@ -126,8 +133,9 @@ class ViewController: UIViewController {
 
 
 extension ViewController: SegmenterSelectedDelegate {
-    func segmenter(_ segmenter: Segmenter, didSelect index: Int, withSegment: Segmenter.Segment, fromIndex: Int, fromSegment: Segmenter.Segment) {
-//        print("tapped: \(index), title: \(withSegment.title)")
-    }
     
+    func segmenter(_ segmenter: Segmenter, didSelect index: Int, withSegment segment: Segment, fromIndex: Int, fromSegment: Segment) {
+        
+        // do something
+    }
 }

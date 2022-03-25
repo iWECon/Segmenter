@@ -4,26 +4,30 @@
 
 import UIKit
 
-extension Segmenter.Segment {
+extension Segment {
     
-    class Label: UIControl, SegmentViewProvider {
+    class _Label: UIControl, SegmentViewProvider {
         
-        required init(_ segment: Segmenter.Segment, configure: Segmenter.SegmentConfigure) {
+        required init(_ segment: Segment, info: SegmentInfoProvider) {
             super.init(frame: .zero)
             
             addSubview(activeLabel)
             addSubview(inactiveLabel)
             
-            guard let labelInfo = segment.kind.userInfo as? LabelInfo else { return }
+            guard let labelInfo = info as? _LabelInfo,
+                  info.viewType == _Label.self
+            else {
+                fatalError("SegmentInfo and segmentViewType do not match.")
+            }
             
             activeLabel.text = labelInfo.title
             inactiveLabel.text = labelInfo.title
             
-            activeLabel.font = labelInfo.activeFont ?? configure.activeFont
-            inactiveLabel.font = labelInfo.inactiveFont ?? configure.inactiveFont
+            activeLabel.font = labelInfo.activeFont
+            inactiveLabel.font = labelInfo.inactiveFont
             
-            activeLabel.textColor = labelInfo.activeColor ?? configure.activeColor
-            inactiveLabel.textColor = labelInfo.inactiveColor ?? configure.inactiveColor
+            activeLabel.textColor = labelInfo.activeColor
+            inactiveLabel.textColor = labelInfo.inactiveColor
         }
         
         lazy var activeLabel: UILabel = {

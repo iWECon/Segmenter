@@ -4,16 +4,20 @@
 
 import UIKit
 
-public extension Segmenter.Segment {
+extension Segment {
     
-    class ViewInfo: SegmentUserInfo {
-        public var activeView: UIView
-        public var inactiveView: UIView?
+    class _ViewInfo: SegmentInfoProvider {
+        var viewType: (SegmentView).Type {
+            _View.self
+        }
         
-        public var activeSize: CGSize
-        public var inactiveSize: CGSize
+        let activeView: UIView
+        let inactiveView: UIView?
         
-        public init(activeView: UIView, inactiveView: UIView? = nil, activeSize: CGSize, inactiveSize: CGSize) {
+        let activeSize: CGSize
+        let inactiveSize: CGSize
+        
+        init(activeView: UIView, inactiveView: UIView? = nil, activeSize: CGSize, inactiveSize: CGSize) {
             self.activeView = activeView
             self.inactiveView = inactiveView
             

@@ -4,15 +4,15 @@
 
 import UIKit
 
-extension Segmenter.Segment {
+extension Segment {
     
-    class Image: View {
+    class _Image: _View {
         
-        required init(_ segment: Segmenter.Segment, configure: Segmenter.SegmentConfigure) {
-            guard let info = segment.kind.userInfo as? ImageInfo,
-                  segment.kind.segmentViewType == Image.self
+        required init(_ segment: Segment, info: SegmentInfoProvider) {
+            guard let info = info as? _ImageInfo,
+                  info.viewType == _Image.self
             else {
-                fatalError("UserInfo and segmentViewType do not match.")
+                fatalError("SegmentInfo and segmentViewType do not match.")
             }
             
             func makeImageView(_ image: UIImage?) -> UIImageView? {
@@ -25,10 +25,10 @@ extension Segmenter.Segment {
                 return imageView
             }
             
-            let viewInfo = ViewInfo(activeView: makeImageView(info.activeImage)!,
+            let viewInfo = _ViewInfo(activeView: makeImageView(info.activeImage)!,
                                     inactiveView: makeImageView(info.inactiveImage),
                                     activeSize: info.activeSize, inactiveSize: info.inactiveSize)
-            super.init(Segmenter.Segment(kind: .view(viewInfo)), configure: configure)
+            super.init(Segment(kind: .view(viewInfo)), info: viewInfo)
         }
         
         required init?(coder: NSCoder) {
