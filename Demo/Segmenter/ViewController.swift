@@ -59,7 +59,7 @@ class ViewController: UIViewController {
         view.addSubview(segmenter)
         
         minorSegmenter.isShadowShouldShow = false
-        minorSegmenter.distribution = .centered
+        minorSegmenter.distribution = .evened
         minorSegmenter.segments = [
             makeMinorSegment(title: "周杰伦,周杰伦,周杰伦"),
             makeMinorSegment(title: "林俊杰,周杰伦"),
