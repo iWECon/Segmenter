@@ -6,11 +6,12 @@ import UIKit
 
 public protocol SegmentViewProvider {
     
+    init(_ segment: Segment, info: SegmentInfoProvider)
     var activeSize: CGSize { get }
     var inactiveSize: CGSize { get }
     
-    init(_ segment: Segmenter.Segment, configure: Segmenter.SegmentConfigure)
-    
+    // override
+    var isSelected: Bool { get set }
     func layoutSubviews()
     func sizeThatFits(_ size: CGSize) -> CGSize
 }

@@ -13,8 +13,6 @@ let package = Package(
             name: "Segmenter",
             targets: ["Segmenter"]),
     ],
-    dependencies: [
-    ],
     targets: [
         .target(
             name: "Segmenter",

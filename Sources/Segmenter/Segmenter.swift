@@ -1,26 +1,4 @@
-
 import UIKit
-
-extension UIEdgeInsets {
-    
-    var vertical: CGFloat {
-        top + bottom
-    }
-    var horizontal: CGFloat {
-        left + right
-    }
-    
-}
-
-public protocol SegmenterSelectedDelegate: AnyObject {
-    
-    func segmenter(_ segmenter: Segmenter,
-                   didSelect index: Int,
-                   withSegment segment: Segmenter.Segment,
-                   fromIndex: Int,
-                   fromSegment: Segmenter.Segment)
-    
-}
 
 public final class Segmenter: UIControl {
     
@@ -199,12 +177,6 @@ public final class Segmenter: UIControl {
         }
     }
     
-    public var segmentConfigure: SegmentConfigure = .main {
-        didSet {
-            reloadSegments()
-        }
-    }
-    
     @IBInspectable public var currentIndex: Int = 0 {
         willSet {
             layer.removeAllAnimations()
@@ -266,7 +238,7 @@ public final class Segmenter: UIControl {
         }
     }
     
-    public var supplementaryViews: [Segmenter.Segment.SupplementView] = [] {
+    public var supplementaryViews: [Segment.SupplementView] = [] {
         didSet {
             // all segments show one supplementary view
             reloadSupplementaryViews()
@@ -287,7 +259,7 @@ public final class Segmenter: UIControl {
     }
     
     /// 获取 segment
-    public func getSegment(at index: Int) -> UIControl & SegmentViewProvider {
+    public func getSegment(at index: Int) -> SegmentView {
         segmentViews[index]
     }
     
@@ -317,7 +289,7 @@ public final class Segmenter: UIControl {
     private let scrollContainer = UIView()
     private var previousIndex = -1
     
-    private var segmentViews: [UIControl & SegmentViewProvider] = []
+    private var segmentViews: [SegmentView] = []
     /// container of supplementaryView
     private let supplementaryView = SupplementaryContainerView()
     
@@ -410,7 +382,7 @@ public final class Segmenter: UIControl {
     
     func reloadSegments() {
         segmentViews.forEach({ $0.removeFromSuperview() })
-        segmentViews = segments.map({ $0.kind.segmentViewType.init($0, configure: segmentConfigure) })
+        segmentViews = segments.map({ $0.info.viewType.init($0, info: $0.info) })
         for (index, segmentView) in segmentViews.enumerated() {
             segmentView.tag = index + 100
             segmentView.isSelected = index == currentIndex
@@ -463,7 +435,7 @@ public final class Segmenter: UIControl {
     // 独立控制
     func supplementaryViewIndependentControls() {
         
-        func saveSupplementaryView(from: Segmenter.Segment.SupplementView, index: Int) -> UIView {
+        func saveSupplementaryView(from: Segment.SupplementView, index: Int) -> UIView {
             let hashable = VerticallyOffsetMapHashable(index: index, view: from.view)
             subSupplementarySubviewsVerticallyOffsetMaps[hashable] = from.offset
             return from.view
@@ -492,7 +464,7 @@ public final class Segmenter: UIControl {
         (subSupplementaryViewMaps[currentIndex] ?? [])?.forEach({ $0.alpha = 1 })
     }
     
-    // MARK: segment view's tap action
+    // MARK: - segment view's tap action
     @objc private func segmentViewTapAction(_ sender: UIControl) {
         let fromIndex = self.segmentViews.enumerated().first(where: { $0.element.isSelected })?.offset ?? 0
         let segmentViewEnumerated = self.segmentViews.enumerated().first(where: { $0.element == sender })

@@ -15,9 +15,8 @@ extension Segmenter {
             lhs.index == rhs.index && lhs.view == rhs.view
         }
         
-        
-        var index: Int
-        var view: UIView
+        let index: Int
+        let view: UIView
         
         init(index: Int, view: UIView) {
             self.index = index

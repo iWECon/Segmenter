@@ -4,19 +4,47 @@
 
 import UIKit
 
-extension Segmenter.Segment {
+extension Segment {
     
-    class View: UIControl & SegmentViewProvider {
+    class _View: SegmentView {
         
         var activeView: UIView
-        
         var inactiveView: UIView?
-        
         var isSingleView = false
-        
         var activeSize: CGSize = .zero
-        
         var inactiveSize: CGSize = .zero
+        
+        required init(_ segment: Segment, info: SegmentInfoProvider) {
+            guard let info = info as? Segment._ViewInfo
+            else {
+                fatalError("SegmentInfo do not match.")
+            }
+            
+            self.isSingleView = true
+            self.activeView = info.activeView
+            self.activeView.frame.size = info.activeSize
+            self.activeView.layer.anchorPoint = .init(x: 0, y: 1)
+            //super.init(frame: .zero)
+            super.init(frame: .zero)
+            
+            addSubview(self.activeView)
+            
+            self.activeSize = info.activeSize
+            self.inactiveSize = info.inactiveSize
+            
+            if let inactiveView = info.inactiveView {
+                self.isSingleView = false
+                
+                self.inactiveView = inactiveView
+                self.inactiveView?.frame.size = info.inactiveSize
+                self.inactiveView?.layer.anchorPoint = .init(x: 0, y: 1)
+                addSubview(self.inactiveView!)
+            }
+        }
+        
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
         
         override var isSelected: Bool {
             didSet {
@@ -37,34 +65,6 @@ extension Segmenter.Segment {
             }
         }
         
-        required init(_ segment: Segmenter.Segment, configure: Segmenter.SegmentConfigure) {
-            guard let info = segment.kind.userInfo as? Segmenter.Segment.ViewInfo,
-                  segment.kind.segmentViewType == View.self
-            else {
-                fatalError("UserInfo and segmentViewType do not match")
-            }
-            
-            self.isSingleView = true
-            self.activeView = info.activeView
-            self.activeView.frame.size = info.activeSize
-            self.activeView.layer.anchorPoint = .init(x: 0, y: 1)
-            super.init(frame: .zero)
-            
-            addSubview(self.activeView)
-            
-            self.activeSize = info.activeSize
-            self.inactiveSize = info.inactiveSize
-            
-            if let inactiveView = info.inactiveView {
-                self.isSingleView = false
-                
-                self.inactiveView = inactiveView
-                self.inactiveView?.frame.size = info.inactiveSize
-                self.inactiveView?.layer.anchorPoint = .init(x: 0, y: 1)
-                addSubview(self.inactiveView!)
-            }
-        }
-        
         override func sizeThatFits(_ size: CGSize) -> CGSize {
             layoutIfNeeded()
             return isSelected ? activeSize : inactiveSize
@@ -77,11 +77,6 @@ extension Segmenter.Segment {
                 inactiveView?.frame.origin = .init(x: 0, y: self.frame.height - (inactiveView?.frame.height ?? 0))
             }
             activeView.frame.origin = .init(x: 0, y: self.frame.height - activeView.frame.height)
-        }
-        
-        
-        required init?(coder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
         }
     }
     
