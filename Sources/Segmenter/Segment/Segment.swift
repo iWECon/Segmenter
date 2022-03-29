@@ -32,8 +32,8 @@ public struct Segment {
     }
     
     let kind: Kind
-    let isShouldHideShadow: Bool
-    let supplementaryViews: [SupplementView]
+    public let isShouldHideShadow: Bool
+    public let supplementaryViews: [SupplementView]
     
     var info: SegmentInfoProvider {
         kind.segmentInfo
