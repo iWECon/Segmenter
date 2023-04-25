@@ -76,14 +76,7 @@ public final class Segmenter: UIControl {
     }
     
     /// Indicator, indicating the currently active segment
-    public var indicator: Indicator? {
-        didSet {
-            oldValue?.removeFromSuperview()
-            DispatchQueue.main.async {
-                self.reloadIndicator()
-            }
-        }
-    }
+    public var indicator: Indicator?
     
     /// some property(left/right) won’t be join calculate when use `.cetered` or `.evened`
     /// default is .init(top: 0, left: 15, bottom: 6, right: 15)
@@ -91,7 +84,7 @@ public final class Segmenter: UIControl {
     /// 当 `distribution` 为 `.centered` or `.evened` 时，其 `left` 和 `right` 在计算位置时会被忽略
     @IBInspectable public lazy var contentInset: UIEdgeInsets = Self.default.contentInset {
         didSet {
-            layoutSubviews()
+            setNeedsLayout()
         }
     }
     
@@ -100,7 +93,7 @@ public final class Segmenter: UIControl {
     /// segment 间距，当 `distribution` 为 `.evened` 或 `.aroundEvened` 在计算位置时会被忽略, 默认值为 15
     @IBInspectable public lazy var segmentSpacing: CGFloat = Self.default.segmentSpacing {
         didSet {
-            layoutSubviews()
+            setNeedsLayout()
         }
     }
     
@@ -134,7 +127,7 @@ public final class Segmenter: UIControl {
     /// segment 与附加视图之间的距离
     @IBInspectable public lazy var spacingOfSegmentAndSupplementary: CGFloat = Self.default.spacingOfSegmentAndSupplementary {
         didSet {
-            layoutSubviews()
+            setNeedsLayout()
         }
     }
     
@@ -159,7 +152,7 @@ public final class Segmenter: UIControl {
             } else {
                 supplementaryView.clearGradientColor()
             }
-            self.layoutSubviews()
+            setNeedsLayout()
         }
     }
     
@@ -408,7 +401,6 @@ public final class Segmenter: UIControl {
         }
         
         reloadSupplementaryViews()
-        reloadIndicator()
     }
     
     func reloadSupplementaryViews() {
@@ -428,25 +420,19 @@ public final class Segmenter: UIControl {
             supplementaryViewIndependentControls()
         }
         
-        layoutSubviews()
-        reloadIndicator()
+        setNeedsLayout()
     }
     
-    func reloadIndicator() {
-        guard !segmentViews.isEmpty else { return }
+    func installIndicatorIfNeeded() {
+        guard !segmentViews.isEmpty, self.indicator?.superview != self.scrollContainer else { return }
         let indexRange = 0 ..< segmentViews.count
         guard let indicator, indexRange.contains(currentIndex) else { return }
-        
-        // force to refresh layout
-        self.setNeedsLayout()
-        self.layoutIfNeeded()
         
         let selectedSegmentView = segmentViews[currentIndex]
         self.scrollContainer.addSubview(indicator)
         indicator.install(withSementView: selectedSegmentView)
-        // set origin
+        // set origin.y
         indicator.frame.origin.y = selectedSegmentView.frame.maxY + indicator.spacing
-        indicator.frame.origin.x = selectedSegmentView.frame.minX
     }
     
     /// check the segment item size
@@ -740,6 +726,8 @@ public final class Segmenter: UIControl {
             }
             break
         }
+        
+        installIndicatorIfNeeded()
     }
     
     public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {

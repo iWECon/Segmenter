@@ -24,9 +24,8 @@ public final class LineIndicator: UIView, Indicator {
     }
     
     public func install(withSementView segmentView: SegmentView) {
-        UIView.animate(withDuration: Segmenter.default.animateDuration, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.9) {
-            self.frame.size = CGSize(width: segmentView.frame.width, height: 4)
-        }
+        self.frame.size = CGSize(width: segmentView.frame.width, height: 4)
+        self.frame.origin.x = segmentView.frame.minX
     }
     
     enum Behavior {
@@ -47,9 +46,9 @@ public final class LineIndicator: UIView, Indicator {
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.3) {
                 switch behavior {
                 case .forward:
-                    self.frame.size.width = (from.frame.maxX - from.frame.minX) + (to.frame.maxX - to.frame.minX)
+                    self.frame.size.width = (to.frame.midX - from.frame.minX)
                 case .backward:
-                    self.frame.size.width = (from.frame.maxX - to.frame.minX)
+                    self.frame.size.width = (from.frame.maxX - to.frame.midX)
                     self.frame.origin.x = right - self.frame.width
                 }
             }
