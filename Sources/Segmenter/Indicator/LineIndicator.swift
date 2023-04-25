@@ -9,14 +9,11 @@ import UIKit
 
 public final class LineIndicator: UIView, Indicator {
     
-    public var initialSize: CGSize = .zero
-    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.initialSize = CGSize(width: 20, height: 4)
-        self.frame.size = self.initialSize
-        self.backgroundColor = .separator
+        self.frame.size = CGSize(width: 20, height: 4)
+        self.backgroundColor = .systemPink
         self.layer.cornerRadius = 3
     }
     
@@ -25,10 +22,8 @@ public final class LineIndicator: UIView, Indicator {
     }
     
     public func install(withSementView segmentView: SegmentView) {
-        self.initialSize = CGSize(width: segmentView.frame.width, height: 4)
-        
         UIView.animate(withDuration: Segmenter.default.animateDuration, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.9) {
-            self.frame.size = self.initialSize
+            self.frame.size = CGSize(width: segmentView.frame.width, height: 4)
         }
     }
     

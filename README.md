@@ -38,6 +38,9 @@ segmenter.segments = [
     // 可参考 +Segment+Image.swift / +Segment+Label.swift / +Segment+View.swift
     Segment(custom: SegmentInfoProvider)
 ]
+
+// Indicator, 下标
+segmenter.indicator = LineIndicator()
 ```
 
 
@@ -69,4 +72,4 @@ public static var `default` = Appearance()
 ## Installation
 
 #### Swift Package Manager
-`.package(url: https://github.com/iWECon/Segmenter", from: "2.0.0")`
+`.package(url: https://github.com/iWECon/Segmenter", from: "2.1.0")`
