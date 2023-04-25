@@ -437,6 +437,10 @@ public final class Segmenter: UIControl {
         let indexRange = 0 ..< segmentViews.count
         guard let indicator, indexRange.contains(currentIndex) else { return }
         
+        // force to refresh layout
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
+        
         let selectedSegmentView = segmentViews[currentIndex]
         self.scrollContainer.addSubview(indicator)
         indicator.install(withSementView: selectedSegmentView)

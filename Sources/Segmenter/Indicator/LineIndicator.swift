@@ -9,7 +9,7 @@ import UIKit
 
 public final class LineIndicator: UIView, Indicator {
     
-    public var spacing: CGFloat { 0 }
+    public var spacing: CGFloat { 4 }
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
