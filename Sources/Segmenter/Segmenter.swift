@@ -76,7 +76,14 @@ public final class Segmenter: UIControl {
     }
     
     /// Indicator, indicating the currently active segment
-    public var indicator: Indicator?
+    public var indicator: Indicator? {
+        didSet {
+            oldValue?.removeFromSuperview()
+            DispatchQueue.main.async {
+                self.reloadIndicator()
+            }
+        }
+    }
     
     /// some property(left/right) won’t be join calculate when use `.cetered` or `.evened`
     /// default is .init(top: 0, left: 15, bottom: 6, right: 15)
@@ -422,11 +429,15 @@ public final class Segmenter: UIControl {
         }
         
         layoutSubviews()
+        reloadIndicator()
     }
     
     func reloadIndicator() {
-        guard let indicator, let selectedSegmentView = segmentViews.filter({ $0.isSelected }).first else { return }
-        indicator.removeFromSuperview()
+        guard !segmentViews.isEmpty else { return }
+        let indexRange = 0 ..< segmentViews.count
+        guard let indicator, indexRange.contains(currentIndex) else { return }
+        
+        let selectedSegmentView = segmentViews[currentIndex]
         self.scrollContainer.addSubview(indicator)
         indicator.install(withSementView: selectedSegmentView)
         // set origin

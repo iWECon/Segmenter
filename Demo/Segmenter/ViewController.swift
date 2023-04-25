@@ -44,7 +44,8 @@ class ViewController: UIViewController {
         let r = UIView()
         r.backgroundColor = .blue
         segmenter.isShadowShouldShow = false
-        segmenter.contentInset.bottom = 10
+        segmenter.contentInset.bottom = 14
+        segmenter.currentIndex = 1
         // set indicator
         segmenter.indicator = LineIndicator()
         segmenter.segments = [
