@@ -72,4 +72,4 @@ public static var `default` = Appearance()
 ## Installation
 
 #### Swift Package Manager
-`.package(url: https://github.com/iWECon/Segmenter", from: "2.1.0")`
+`.package(url: https://github.com/iWECon/Segmenter", from: "2.1.2")`
