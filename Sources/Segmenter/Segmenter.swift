@@ -75,6 +75,9 @@ public final class Segmenter: UIControl {
         }
     }
     
+    /// Indicator, indicating the currently active segment
+    public var indicator: Indicator?
+    
     /// some property(left/right) won’t be join calculate when use `.cetered` or `.evened`
     /// default is .init(top: 0, left: 15, bottom: 6, right: 15)
     ///
@@ -194,7 +197,7 @@ public final class Segmenter: UIControl {
             let toIndex = currentIndex
             
             // do animate
-            UIView.animate(withDuration: animateDuration, delay: 0, options: [.allowUserInteraction, .beginFromCurrentState]) {
+            UIView.animate(withDuration: animateDuration, delay: 0, options: [.allowUserInteraction, .beginFromCurrentState, .curveEaseOut]) {
                 from?.isSelected = false
                 to?.isSelected = true
                 
@@ -216,6 +219,10 @@ public final class Segmenter: UIControl {
                 }
                 
                 self.layoutSubviews()
+                
+                if let from, let to, let indicator = self.indicator {
+                    indicator.change(from: from, to: to)
+                }
                 
                 var centeredRect: CGRect?
                 if let to = to {
@@ -394,6 +401,7 @@ public final class Segmenter: UIControl {
         }
         
         reloadSupplementaryViews()
+        reloadIndicator()
     }
     
     func reloadSupplementaryViews() {
@@ -414,6 +422,16 @@ public final class Segmenter: UIControl {
         }
         
         layoutSubviews()
+    }
+    
+    func reloadIndicator() {
+        guard let indicator, let selectedSegmentView = segmentViews.filter({ $0.isSelected }).first else { return }
+        indicator.removeFromSuperview()
+        self.scrollContainer.addSubview(indicator)
+        indicator.install(withSementView: selectedSegmentView)
+        // set origin
+        indicator.frame.origin.y = selectedSegmentView.frame.maxY + indicator.spacing
+        indicator.frame.origin.x = selectedSegmentView.frame.minX
     }
     
     /// check the segment item size
@@ -491,13 +509,17 @@ public final class Segmenter: UIControl {
                 func setPosition(idx: Int) {
                     if idx == 0 {
                         // right, bottom
-                        supplementSubview.frame.origin = CGPoint(x: supplementaryView.frame.width - supplementSubview.frame.width + supplementaryHorizontallyOffset - contentInset.right,
-                                                                 y: supplementaryView.frame.height - supplementSubview.frame.height + supplementaryVerticallyOffset + verticallyOffset)
+                        supplementSubview.frame.origin = CGPoint(
+                            x: supplementaryView.frame.width - supplementSubview.frame.width + supplementaryHorizontallyOffset - contentInset.right,
+                            y: supplementaryView.frame.height - supplementSubview.frame.height + supplementaryVerticallyOffset + verticallyOffset
+                        )
                     } else {
                         // right, bottom of previous
                         let previousView = views[idx - 1]
-                        supplementSubview.frame.origin = CGPoint(x: previousView.frame.minX - supplementaryViewSpacing - supplementSubview.frame.width,
-                                                                 y: supplementaryView.frame.height - supplementSubview.frame.height + supplementaryVerticallyOffset + verticallyOffset)
+                        supplementSubview.frame.origin = CGPoint(
+                            x: previousView.frame.minX - supplementaryViewSpacing - supplementSubview.frame.width,
+                            y: supplementaryView.frame.height - supplementSubview.frame.height + supplementaryVerticallyOffset + verticallyOffset
+                        )
                     }
                 }
                 
@@ -517,12 +539,16 @@ public final class Segmenter: UIControl {
         
         for (index, map) in supplementaryViews.enumerated() {
             if index == 0 {
-                map.view.frame.origin = CGPoint(x: supplementaryView.frame.width - map.view.frame.width + supplementaryHorizontallyOffset - contentInset.right,
-                                                y: supplementaryView.frame.height - map.view.frame.height + supplementaryVerticallyOffset + map.offset)
+                map.view.frame.origin = CGPoint(
+                    x: supplementaryView.frame.width - map.view.frame.width + supplementaryHorizontallyOffset - contentInset.right,
+                    y: supplementaryView.frame.height - map.view.frame.height + supplementaryVerticallyOffset + map.offset
+                )
             } else {
                 let previousView = supplementaryViews[index - 1].view
-                map.view.frame.origin = CGPoint(x: previousView.frame.minX - supplementaryViewSpacing - map.view.frame.width,
-                                                y: supplementaryView.frame.height - map.view.frame.height + supplementaryVerticallyOffset + map.offset)
+                map.view.frame.origin = CGPoint(
+                    x: previousView.frame.minX - supplementaryViewSpacing - map.view.frame.width,
+                    y: supplementaryView.frame.height - map.view.frame.height + supplementaryVerticallyOffset + map.offset
+                )
             }
         }
     }
@@ -533,10 +559,12 @@ public final class Segmenter: UIControl {
         
         defer {
             if distribution != .default {
-                supplementaryView.frame = CGRect(x: scrollView.center.x,
-                                                y: scrollView.frame.minY + contentInset.top,
-                                                width: (scrollView.frame.width / 2),
-                                                height: scrollView.frame.height - contentInset.vertical)
+                supplementaryView.frame = CGRect(
+                    x: scrollView.center.x,
+                    y: scrollView.frame.minY + contentInset.top,
+                    width: (scrollView.frame.width / 2),
+                    height: scrollView.frame.height - contentInset.vertical
+                )
             }
             
             layoutSupplementaryViewsIfNeeded()
@@ -597,10 +625,12 @@ public final class Segmenter: UIControl {
                 case .fade:
                     supplementaryView.alpha = 1
                 }
-                scrollContainer.frame = CGRect(x: scrollFrame.origin.x,
-                                              y: scrollFrame.minY,
-                                              width: scrollFrame.width + currentSupplementaryViewsWidthWithSpacing + spacingOfSegmentAndSupplementary,
-                                              height: scrollFrame.height)
+                scrollContainer.frame = CGRect(
+                    x: scrollFrame.origin.x,
+                    y: scrollFrame.minY,
+                    width: scrollFrame.width + currentSupplementaryViewsWidthWithSpacing + spacingOfSegmentAndSupplementary,
+                    height: scrollFrame.height
+                )
                 scrollView.contentSize = CGSize(width: scrollContainer.frame.maxX, height: scrollFrame.height)
             }
             

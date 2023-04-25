@@ -33,6 +33,8 @@
 		08BA615427EC606600D78709 /* Segmentedable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BA613F27EC606600D78709 /* Segmentedable.swift */; };
 		08BA615527EC606600D78709 /* SegmenterSelectedDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BA614027EC606600D78709 /* SegmenterSelectedDelegate.swift */; };
 		08BA615627EC606600D78709 /* Segmenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BA614127EC606600D78709 /* Segmenter.swift */; };
+		08C8C7AB29F7A6A100572349 /* Indicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C8C7AA29F7A6A100572349 /* Indicator.swift */; };
+		08C8C7AD29F7BC2500572349 /* LineIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C8C7AC29F7BC2500572349 /* LineIndicator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +66,8 @@
 		08BA613F27EC606600D78709 /* Segmentedable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Segmentedable.swift; sourceTree = "<group>"; };
 		08BA614027EC606600D78709 /* SegmenterSelectedDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmenterSelectedDelegate.swift; sourceTree = "<group>"; };
 		08BA614127EC606600D78709 /* Segmenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Segmenter.swift; sourceTree = "<group>"; };
+		08C8C7AA29F7A6A100572349 /* Indicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Indicator.swift; sourceTree = "<group>"; };
+		08C8C7AC29F7BC2500572349 /* LineIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineIndicator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +115,7 @@
 		08BA612727EC606600D78709 /* Segmenter */ = {
 			isa = PBXGroup;
 			children = (
+				08C8C7A929F7A69B00572349 /* Indicator */,
 				08BA612827EC606600D78709 /* Transition */,
 				08BA612D27EC606600D78709 /* SegmenterGradientView.swift */,
 				08BA612E27EC606600D78709 /* UIEdgeInsets+.swift */,
@@ -173,6 +178,15 @@
 				08BA613B27EC606600D78709 /* +Segment+View.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		08C8C7A929F7A69B00572349 /* Indicator */ = {
+			isa = PBXGroup;
+			children = (
+				08C8C7AA29F7A6A100572349 /* Indicator.swift */,
+				08C8C7AC29F7BC2500572349 /* LineIndicator.swift */,
+			);
+			path = Indicator;
 			sourceTree = "<group>";
 		};
 		08D1BCBC26329C0400967F1B /* Sources */ = {
@@ -261,6 +275,7 @@
 				08BA614627EC606600D78709 /* UIEdgeInsets+.swift in Sources */,
 				08BA614327EC606600D78709 /* FadePopSupplementaryViewsTransition.swift in Sources */,
 				08BA614927EC606600D78709 /* +ViewInfo.swift in Sources */,
+				08C8C7AB29F7A6A100572349 /* Indicator.swift in Sources */,
 				08BA615127EC606600D78709 /* +SupplementaryContainerView.swift in Sources */,
 				08BA615327EC606600D78709 /* +Distribution.swift in Sources */,
 				08BA614A27EC606600D78709 /* +ImageInfo.swift in Sources */,
@@ -274,6 +289,7 @@
 				08BA614E27EC606600D78709 /* +Segment+Image.swift in Sources */,
 				08BA614D27EC606600D78709 /* +Segment+Label.swift in Sources */,
 				08BA614227EC606600D78709 /* DefaultSupplementaryViewsTransition.swift in Sources */,
+				08C8C7AD29F7BC2500572349 /* LineIndicator.swift in Sources */,
 				08BA614C27EC606600D78709 /* SegmentInfoProvider.swift in Sources */,
 				08BA614827EC606600D78709 /* Segment.swift in Sources */,
 				08BA615527EC606600D78709 /* SegmenterSelectedDelegate.swift in Sources */,
