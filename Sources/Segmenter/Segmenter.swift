@@ -733,9 +733,9 @@ public final class Segmenter: UIControl {
     public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         var responderView = super.hitTest(point, with: event)
         
-        // supplementaryContainer 加了 20 的宽度偏移量, 用来给超出的 segment 做淡出/入效果, 不需要响应事件
         if distribution == .default {
             let f = supplementaryView.frame
+            // supplementaryContainer 加了 20 的宽度偏移量, 用来给超出的 segment 做淡出/入效果, 不需要响应事件
             // bugfix: 20 + spacing, remove spacing
             let supplementaryContainerInvalidFrame = CGRect(x: f.minX, y: f.minY, width: 20, height: f.height)
             if supplementaryContainerInvalidFrame.contains(point) {
@@ -750,7 +750,9 @@ public final class Segmenter: UIControl {
                 }
             }
         }
-        return responderView
+        
+        // bugfix
+        return super.hitTest(point, with: event)
     }
 }
 
