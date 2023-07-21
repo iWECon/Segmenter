@@ -42,7 +42,7 @@ public final class LineIndicator: UIView, Indicator {
             right = self.frame.maxX
         }
         
-        UIView.animateKeyframes(withDuration: Segmenter.default.animateDuration, delay: 0, options: [.beginFromCurrentState, .allowUserInteraction]) {
+        UIView.animateKeyframes(withDuration: Segmenter.default.animateDuration, delay: 0, options: [.beginFromCurrentState, .calculationModeCubicPaced]) {
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.3) {
                 switch behavior {
                 case .forward:

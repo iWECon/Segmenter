@@ -605,6 +605,14 @@ public final class Segmenter: UIControl {
                         height: scrollContainer.frame.height
                     )
                 case .fade:
+                    UIView.performWithoutAnimation {
+                        self.supplementaryView.frame = CGRect(
+                            x: frame.width,
+                            y: self.scrollView.frame.minY + self.contentInset.top,
+                            width: 0,
+                            height: self.scrollContainer.frame.height
+                        )
+                    }
                     supplementaryView.alpha = 0
                 }
                 scrollView.contentSize = CGSize(width: scrollViewContentWidth, height: scrollFrame.height)
@@ -614,7 +622,7 @@ public final class Segmenter: UIControl {
             func calculatorSupplementaryViewSize(_ views: [UIView]) {
                 let offsetWidth: CGFloat = 20
                 switch supplementaryViewTransition {
-                case .default:
+                case .`default`:
                     supplementaryView.frame = CGRect(
                         x: frame.width - currentSupplementaryViewsWidthWithSpacing - offsetWidth,
                         y: scrollView.frame.minY + contentInset.top,
@@ -624,6 +632,16 @@ public final class Segmenter: UIControl {
                         height: scrollFrame.height
                     )
                 case .fade:
+                    UIView.performWithoutAnimation {
+                        self.supplementaryView.frame = CGRect(
+                            x: frame.width - self.currentSupplementaryViewsWidthWithSpacing - offsetWidth,
+                            y: self.scrollView.frame.minY + self.contentInset.top,
+                            // 20 偏移量，多出来 20，用来给 scrollView 出现做淡出的
+                            // 偏移的 20 部分的点击时间会传递到 segmentContainerView 中，已在 hitTest 中处理
+                            width: self.currentSupplementaryViewsWidthWithSpacing + offsetWidth,
+                            height: scrollFrame.height
+                        )
+                    }
                     supplementaryView.alpha = 1
                 }
                 scrollContainer.frame = CGRect(

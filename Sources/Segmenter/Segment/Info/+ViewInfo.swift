@@ -4,18 +4,27 @@
 
 import UIKit
 
+public protocol SegmentViewInfoProvier: SegmentInfoProvider {
+    var activeView: UIView { get }
+    var inactiveView: UIView? { get }
+    
+    var activeSize: CGSize { get }
+    var inactiveSize: CGSize { get }
+}
+
+// MARK: ViewInfo
 extension Segment {
     
-    class _ViewInfo: SegmentInfoProvider {
+    struct _ViewInfo: SegmentViewInfoProvier {
         var viewType: (SegmentView).Type {
-            _View.self
+            View.self
         }
         
-        let activeView: UIView
-        let inactiveView: UIView?
+        var activeView: UIView
+        var inactiveView: UIView?
         
-        let activeSize: CGSize
-        let inactiveSize: CGSize
+        var activeSize: CGSize
+        var inactiveSize: CGSize
         
         init(activeView: UIView, inactiveView: UIView? = nil, activeSize: CGSize, inactiveSize: CGSize) {
             self.activeView = activeView

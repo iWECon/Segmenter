@@ -4,18 +4,27 @@
 
 import UIKit
 
+public protocol SegmentImageInfoProvider: SegmentInfoProvider {
+    var activeImage: UIImage { get }
+    var inactiveImage: UIImage? { get }
+    
+    var activeSize: CGSize { get }
+    var inactiveSize: CGSize { get }
+}
+
+// MARK: ImageInfo
 extension Segment {
     
-    class _ImageInfo: SegmentInfoProvider {
+    struct _ImageInfo: SegmentImageInfoProvider {
         var viewType: (SegmentView).Type {
-            _Image.self
+            Image.self
         }
         
-        let activeImage: UIImage
-        let inactiveImage: UIImage?
+        var activeImage: UIImage
+        var inactiveImage: UIImage?
         
-        let activeSize: CGSize
-        let inactiveSize: CGSize
+        var activeSize: CGSize
+        var inactiveSize: CGSize
         
         init(activeImage: UIImage, inacitveImage: UIImage? = nil, activeSize: CGSize, inactiveSize: CGSize) {
             self.activeImage = activeImage

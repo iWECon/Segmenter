@@ -4,20 +4,29 @@
 
 import UIKit
 
+public protocol SegmentLabelInfoProvider: SegmentInfoProvider {
+    var title: String? { get }
+    
+    var activeFont: UIFont? { get }
+    var activeColor: UIColor? { get }
+    var inactiveFont: UIFont? { get }
+    var inactiveColor: UIColor? { get }
+}
+
 // MARK:- LabelInfo
 extension Segment {
     
-    struct _LabelInfo: SegmentInfoProvider {
+    struct _LabelInfo: SegmentLabelInfoProvider {
         var viewType: (SegmentView).Type {
-            _Label.self
+            Label.self
         }
         
-        let title: String?
+        var title: String?
         
-        let activeFont: UIFont?
-        let activeColor: UIColor?
-        let inactiveFont: UIFont?
-        let inactiveColor: UIColor?
+        var activeFont: UIFont?
+        var activeColor: UIColor?
+        var inactiveFont: UIFont?
+        var inactiveColor: UIColor?
         
         init(title: String, activeFont: UIFont? = nil, activeColor: UIColor? = nil, inactiveFont: UIFont? = nil, inactiveColor: UIColor? = nil) {
             self.title = title

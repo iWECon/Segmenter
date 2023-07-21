@@ -6,6 +6,36 @@
 //
 
 import UIKit
+import Segmenter
+
+final class IImageView: Segment.Image {
+    
+    required init(_ segment: Segment, info: SegmentInfoProvider) {
+        super.init(segment, info: info)
+        
+        print("ok")
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+struct IInfo: SegmentImageInfoProvider {
+    
+    var activeImage: UIImage
+    
+    var inactiveImage: UIImage?
+    
+    var activeSize: CGSize
+    
+    var inactiveSize: CGSize
+    
+    var viewType: (SegmentView).Type {
+        IImageView.self
+    }
+    
+}
 
 class ViewController: UIViewController {
     
@@ -46,11 +76,14 @@ class ViewController: UIViewController {
         segmenter.isShadowShouldShow = false
         segmenter.contentInset.bottom = 10
         // set indicator
-        segmenter.indicator = LineIndicator()
+        let indicator = LineIndicator()
+        
+        segmenter.indicator = indicator
         segmenter.segments = [
             .init(view: v, inactiveView: r, activeSize: CGSize(width: 44, height: 24), inactiveSize: CGSize(width: 34, height: 18.57), supplementaryViews: [makeButton("按钮1"), makeButton("按钮2"), makeButton("按钮3")]),
             .init(image: UIImage(named: "chuanghua")!, inactiveImage: UIImage(named: "chuanghua-2")!, activeSize: CGSize(width: 32, height: 32), inactiveSize: CGSize(width: 24, height: 24), supplementaryViews: [makeButton("按 钮 4"), makeButton("按钮5"), makeButton("按 钮 6")]),
             .init(title: "歌手 Anchor"),
+            .init(custom: IInfo(activeImage: UIImage(named: "chuanghua-2")!, activeSize: CGSize(width: 32, height: 32), inactiveSize: CGSize(width: 24, height: 24))),
             .init(title: "歌曲 Songs", supplementaryViews: [makeButton("听妈妈的话")]),
             .init(title: "歌词 LRC", supplementaryViews: [makeButton("你突然释怀的笑"), makeButton("笑声盘旋半山腰")]),
             .init(title: "简介 Brief", supplementaryViews: [makeButton("周 杰 伦 简 介")]),

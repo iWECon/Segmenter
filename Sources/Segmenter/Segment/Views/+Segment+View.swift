@@ -6,25 +6,23 @@ import UIKit
 
 extension Segment {
     
-    class _View: SegmentView {
+    open class View: SegmentView {
         
-        var activeView: UIView
-        var inactiveView: UIView?
-        var isSingleView = false
-        var activeSize: CGSize = .zero
-        var inactiveSize: CGSize = .zero
+        open var activeView: UIView
+        open var inactiveView: UIView?
+        open var isSingleView = false
+        open var activeSize: CGSize = .zero
+        open var inactiveSize: CGSize = .zero
         
-        required init(_ segment: Segment, info: SegmentInfoProvider) {
-            guard let info = info as? Segment._ViewInfo
-            else {
-                fatalError("SegmentInfo do not match.")
+        public required init(_ segment: Segment, info: SegmentInfoProvider) {
+            guard let info = info as? SegmentViewInfoProvier else {
+                fatalError("SegmentInfoProvider do not match as `SegmentViewInfoProvier`.")
             }
             
             self.isSingleView = true
             self.activeView = info.activeView
             self.activeView.frame.size = info.activeSize
             self.activeView.layer.anchorPoint = .init(x: 0, y: 1)
-            //super.init(frame: .zero)
             super.init(frame: .zero)
             
             addSubview(self.activeView)
@@ -42,11 +40,11 @@ extension Segment {
             }
         }
         
-        required init?(coder: NSCoder) {
+        public required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }
         
-        override var isSelected: Bool {
+        open override var isSelected: Bool {
             didSet {
                 sizeToFit()
                 
@@ -65,12 +63,12 @@ extension Segment {
             }
         }
         
-        override func sizeThatFits(_ size: CGSize) -> CGSize {
+        open override func sizeThatFits(_ size: CGSize) -> CGSize {
             layoutIfNeeded()
             return isSelected ? activeSize : inactiveSize
         }
         
-        override func layoutSubviews() {
+        open override func layoutSubviews() {
             super.layoutSubviews()
             
             if !isSingleView {
