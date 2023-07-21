@@ -23,9 +23,12 @@ extension Segment {
                 return imageView
             }
             
-            let viewInfo = _ViewInfo(activeView: makeImageView(info.activeImage)!,
-                                    inactiveView: makeImageView(info.inactiveImage),
-                                    activeSize: info.activeSize, inactiveSize: info.inactiveSize)
+            let viewInfo = _ViewInfo(
+                activeView: makeImageView(info.activeImage)!,
+                inactiveView: makeImageView(info.inactiveImage),
+                activeSize: info.activeSize,
+                inactiveSize: info.inactiveSize
+            )
             super.init(Segment(kind: .view(viewInfo)), info: viewInfo)
         }
         

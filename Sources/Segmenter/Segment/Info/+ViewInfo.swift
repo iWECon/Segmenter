@@ -26,7 +26,12 @@ extension Segment {
         var activeSize: CGSize
         var inactiveSize: CGSize
         
-        init(activeView: UIView, inactiveView: UIView? = nil, activeSize: CGSize, inactiveSize: CGSize) {
+        init(
+            activeView: UIView,
+            inactiveView: UIView? = nil,
+            activeSize: CGSize,
+            inactiveSize: CGSize
+        ) {
             self.activeView = activeView
             self.inactiveView = inactiveView
             

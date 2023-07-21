@@ -26,7 +26,12 @@ extension Segment {
         var activeSize: CGSize
         var inactiveSize: CGSize
         
-        init(activeImage: UIImage, inacitveImage: UIImage? = nil, activeSize: CGSize, inactiveSize: CGSize) {
+        init(
+            activeImage: UIImage,
+            inacitveImage: UIImage? = nil,
+            activeSize: CGSize,
+            inactiveSize: CGSize
+        ) {
             self.activeImage = activeImage
             self.activeSize = activeSize
             self.inactiveSize = inactiveSize
