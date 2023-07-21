@@ -6,19 +6,17 @@ import UIKit
 
 extension Segment {
     
-    class _Label: UIControl, SegmentViewProvider {
+    open class Label: UIControl, SegmentViewProvider {
         
-        required init(_ segment: Segment, info: SegmentInfoProvider) {
+        public required init(_ segment: Segment, info: SegmentInfoProvider) {
             super.init(frame: .zero)
+            
+            guard let labelInfo = info as? SegmentLabelInfoProvider else {
+                fatalError("SegmentInfoProvider do not match as `SegmentLabelInfoProvider`.")
+            }
             
             addSubview(activeLabel)
             addSubview(inactiveLabel)
-            
-            guard let labelInfo = info as? _LabelInfo,
-                  info.viewType == _Label.self
-            else {
-                fatalError("SegmentInfo and segmentViewType do not match.")
-            }
             
             activeLabel.text = labelInfo.title
             inactiveLabel.text = labelInfo.title
@@ -30,7 +28,7 @@ extension Segment {
             inactiveLabel.textColor = labelInfo.inactiveColor
         }
         
-        lazy var activeLabel: UILabel = {
+        open lazy var activeLabel: UILabel = {
             let label = UILabel()
             label.textAlignment = .left
             label.alpha = 0
@@ -40,7 +38,7 @@ extension Segment {
             return label
         }()
         
-        lazy var inactiveLabel: UILabel = {
+        open lazy var inactiveLabel: UILabel = {
             let label = UILabel()
             label.textAlignment = .left
             label.alpha = 0
@@ -50,21 +48,21 @@ extension Segment {
             return label
         }()
         
-        var activeSize: CGSize {
+        open var activeSize: CGSize {
             activeLabel.frame.size
         }
         
-        var inactiveSize: CGSize {
+        open var inactiveSize: CGSize {
             inactiveLabel.frame.size
         }
         
-        override func sizeThatFits(_ size: CGSize) -> CGSize {
+        open override func sizeThatFits(_ size: CGSize) -> CGSize {
             invalidateIntrinsicContentSize()
             layoutIfNeeded()
             return isSelected ? activeLabel.intrinsicContentSize : inactiveLabel.intrinsicContentSize
         }
         
-        override var isSelected: Bool {
+        open override var isSelected: Bool {
             didSet {
                 sizeToFit()
                 
@@ -78,7 +76,7 @@ extension Segment {
             }
         }
         
-        override func layoutSubviews() {
+        open override func layoutSubviews() {
             super.layoutSubviews()
             
             activeLabel.sizeToFit()
@@ -88,10 +86,10 @@ extension Segment {
             inactiveLabel.frame.origin = .init(x: 0, y: self.frame.height - inactiveLabel.frame.height)
         }
         
-        override init(frame: CGRect) {
+        public override init(frame: CGRect) {
             super.init(frame: frame)
         }
-        required init?(coder: NSCoder) {
+        public required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }
     }

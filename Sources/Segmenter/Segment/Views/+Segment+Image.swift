@@ -6,13 +6,11 @@ import UIKit
 
 extension Segment {
     
-    class _Image: _View {
+    open class Image: View {
         
-        required init(_ segment: Segment, info: SegmentInfoProvider) {
-            guard let info = info as? _ImageInfo,
-                  info.viewType == _Image.self
-            else {
-                fatalError("SegmentInfo and segmentViewType do not match.")
+        public required init(_ segment: Segment, info: SegmentInfoProvider) {
+            guard let info = info as? SegmentImageInfoProvider else {
+                fatalError("SegmentInfoProvider do not match as `SegmentImageInfoProvider`.")
             }
             
             func makeImageView(_ image: UIImage?) -> UIImageView? {
@@ -31,7 +29,7 @@ extension Segment {
             super.init(Segment(kind: .view(viewInfo)), info: viewInfo)
         }
         
-        required init?(coder: NSCoder) {
+        public required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }
     }

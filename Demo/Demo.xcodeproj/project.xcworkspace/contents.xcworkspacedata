@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:">
+      location = "self:/Users/i/repositories/private/Segmenter/Demo/Demo.xcodeproj">
    </FileRef>
 </Workspace>
