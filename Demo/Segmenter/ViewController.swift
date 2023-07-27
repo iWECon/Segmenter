@@ -77,7 +77,7 @@ class ViewController: UIViewController {
         segmenter.contentInset.bottom = 10
         // set indicator
         let indicator = LineIndicator()
-        
+        indicator.transitionDelegate = self
         segmenter.indicator = indicator
         segmenter.segments = [
             .init(view: v, inactiveView: r, activeSize: CGSize(width: 44, height: 24), inactiveSize: CGSize(width: 34, height: 18.57), supplementaryViews: [makeButton("按钮1"), makeButton("按钮2"), makeButton("按钮3")]),
@@ -173,5 +173,19 @@ extension ViewController: SegmenterSelectedDelegate {
     func segmenter(_ segmenter: Segmenter, didSelect index: Int, withSegment segment: Segment, fromIndex: Int, fromSegment: Segment) {
         
         // do something
+    }
+}
+
+extension ViewController: IndicatorTransitionDelegate {
+    
+    func indicatorTransition(_ indicator: Indicator, from: SegmentView, to: SegmentView, direction: IndicatorDirection) {
+        let lineIndicator = indicator as! LineIndicator
+        
+        guard to is Segment.Label else {
+            lineIndicator.backgroundColors = LineIndicator.defaultColors
+            return
+        }
+        
+        lineIndicator.backgroundColors = [UIColor.red.cgColor, UIColor.blue.cgColor]
     }
 }
