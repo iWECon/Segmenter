@@ -769,8 +769,7 @@ public final class Segmenter: UIControl {
             }
         }
         
-        // bugfix
-        return super.hitTest(point, with: event)
+        return responderView
     }
 }
 
