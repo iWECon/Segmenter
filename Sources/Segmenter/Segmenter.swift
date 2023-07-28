@@ -82,20 +82,12 @@ public final class Segmenter: UIControl {
     /// default is .init(top: 0, left: 15, bottom: 6, right: 15)
     ///
     /// 当 `distribution` 为 `.centered` or `.evened` 时，其 `left` 和 `right` 在计算位置时会被忽略
-    @IBInspectable public lazy var contentInset: UIEdgeInsets = Self.default.contentInset {
-        didSet {
-            setNeedsLayout()
-        }
-    }
+    @IBInspectable public lazy var contentInset: UIEdgeInsets = Self.default.contentInset
     
     /// won't be join calculate when use `.evened` or `.aroundEvened`, default is 15
     ///
     /// segment 间距，当 `distribution` 为 `.evened` 或 `.aroundEvened` 在计算位置时会被忽略, 默认值为 15
-    @IBInspectable public lazy var segmentSpacing: CGFloat = Self.default.segmentSpacing {
-        didSet {
-            setNeedsLayout()
-        }
-    }
+    @IBInspectable public lazy var segmentSpacing: CGFloat = Self.default.segmentSpacing
     
     /// default is 10
     ///
@@ -125,11 +117,7 @@ public final class Segmenter: UIControl {
     }
     
     /// segment 与附加视图之间的距离
-    @IBInspectable public lazy var spacingOfSegmentAndSupplementary: CGFloat = Self.default.spacingOfSegmentAndSupplementary {
-        didSet {
-            setNeedsLayout()
-        }
-    }
+    @IBInspectable public lazy var spacingOfSegmentAndSupplementary: CGFloat = Self.default.spacingOfSegmentAndSupplementary
     
     /// animate duration of segmented change, default is 0.34
     ///
@@ -152,7 +140,7 @@ public final class Segmenter: UIControl {
             } else {
                 supplementaryView.clearGradientColor()
             }
-            setNeedsLayout()
+            layoutSubviews()
         }
     }
     
@@ -390,7 +378,7 @@ public final class Segmenter: UIControl {
         subSupplementarySubviewsVerticallyOffsetMaps.removeAll()
     }
     
-    func reloadSegments() {
+    public func reloadSegments() {
         segmentViews.forEach({ $0.removeFromSuperview() })
         segmentViews = segments.map({ $0.info.viewType.init($0, info: $0.info) })
         for (index, segmentView) in segmentViews.enumerated() {
@@ -401,9 +389,11 @@ public final class Segmenter: UIControl {
         }
         
         reloadSupplementaryViews()
+        
+        reloadIndicator()
     }
     
-    func reloadSupplementaryViews() {
+    public func reloadSupplementaryViews() {
         guard isAllOfOne || isIndependentControls else { return }
         
         // load sub supplmentaryViews
@@ -420,19 +410,31 @@ public final class Segmenter: UIControl {
             supplementaryViewIndependentControls()
         }
         
-        setNeedsLayout()
+        layoutSubviews()
     }
     
     func installIndicatorIfNeeded() {
-        guard !segmentViews.isEmpty, self.indicator?.superview != self.scrollContainer else { return }
+        guard !segmentViews.isEmpty, let indicator else { return }
+        
         let indexRange = 0 ..< segmentViews.count
-        guard let indicator, indexRange.contains(currentIndex) else { return }
+        guard indexRange.contains(currentIndex) else { return }
+        
+        if let spv = indicator.superview {
+            // refresh y
+            indicator.frame.origin.y = spv.frame.height + indicator.spacing
+            return
+        }
         
         let selectedSegmentView = segmentViews[currentIndex]
         self.scrollContainer.addSubview(indicator)
         indicator.install(withSementView: selectedSegmentView)
         // set origin.y
-        indicator.frame.origin.y = selectedSegmentView.frame.maxY + indicator.spacing
+        indicator.frame.origin.y = selectedSegmentView.inactiveSize.height + indicator.spacing
+    }
+    
+    public func reloadIndicator() {
+        indicator?.removeFromSuperview()
+        installIndicatorIfNeeded()
     }
     
     /// check the segment item size
@@ -675,7 +677,7 @@ public final class Segmenter: UIControl {
         }
         
         switch distribution {
-        case .default:
+        case .`default`:
             scrollFrame.origin = CGPoint(x: contentInset.left, y: contentInset.top)
             scrollFrame.size.height -= contentInset.vertical
             scrollFrame.size.width = allSegmentsWidthWithSegmentSpacing
@@ -756,21 +758,21 @@ public final class Segmenter: UIControl {
             // supplementaryContainer 加了 20 的宽度偏移量, 用来给超出的 segment 做淡出/入效果, 不需要响应事件
             // bugfix: 20 + spacing, remove spacing
             let supplementaryContainerInvalidFrame = CGRect(x: f.minX, y: f.minY, width: 20, height: f.height)
-            if supplementaryContainerInvalidFrame.contains(point) {
+            let inSupplementaryContainerInvalidFrame = supplementaryContainerInvalidFrame.contains(point)
+            
+            if inSupplementaryContainerInvalidFrame {
                 responderView = scrollContainer
-            }
-        }
-        if responderView == scrollContainer {
-            let containerPoint = convert(point, to: scrollContainer)
-            for subview in scrollContainer.subviews {
-                if subview.frame.inset(by: .init(top: -10, left: -10, bottom: -10, right: -10)).contains(containerPoint) {
-                    return subview
+            } else {
+                let inSupplementaryView = supplementaryView.frame.contains(point)
+                if inSupplementaryView {
+                    // in supplementaryContainerView
+                    return supplementaryView.hitTest(convert(point, to: supplementaryView), with: event)
                 }
+                responderView = scrollContainer.hitTest(convert(point, to: scrollContainer), with: event)
             }
         }
         
-        // bugfix
-        return super.hitTest(point, with: event)
+        return responderView
     }
 }
 
