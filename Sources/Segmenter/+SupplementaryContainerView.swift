@@ -11,21 +11,13 @@ public extension Segmenter {
     class SupplementaryContainerView: UIView, SegmenterSupplementaryContainer {
         
         public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-            for subview in subviews.reversed() {
-                let isValidResponderView = !subview.isHidden && subview.alpha > 0 && subview.isUserInteractionEnabled
-                guard isValidResponderView else {
-                    continue
-                }
-                
-                if let subviewHitTest = subview.hitTest(point, with: event) {
-                    return subviewHitTest
-                }
+            let filteredSubviews = subviews.filter({ !$0.isHidden && $0.alpha > 0 && $0.isUserInteractionEnabled })
+            for subview in filteredSubviews {
                 if subview.frame.contains(point) {
                     return subview
                 }
-                return super.hitTest(point, with: event)
             }
-            return nil
+            return super.hitTest(point, with: event)
         }
         
         override public class var layerClass: AnyClass {

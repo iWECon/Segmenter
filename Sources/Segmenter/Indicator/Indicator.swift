@@ -9,7 +9,7 @@ import UIKit
 
 public protocol Indicator: UIView {
     
-    /// Spacing between `Indicator` and `SegmentView`, default is 4
+    /// Spacing between `Indicator` and `SegmentView`, default is 2
     var spacing: CGFloat { get }
     
     func install(withSementView sementView: SegmentView)
@@ -18,5 +18,5 @@ public protocol Indicator: UIView {
 }
 
 extension Indicator {
-    public var spacing: CGFloat { 4 }
+    public var spacing: CGFloat { 2 }
 }

@@ -388,9 +388,9 @@ public final class Segmenter: UIControl {
             scrollContainer.addSubview(segmentView)
         }
         
-        reloadIndicator()
-        
         reloadSupplementaryViews()
+        
+        reloadIndicator()
     }
     
     public func reloadSupplementaryViews() {
@@ -414,15 +414,22 @@ public final class Segmenter: UIControl {
     }
     
     func installIndicatorIfNeeded() {
-        guard !segmentViews.isEmpty, self.indicator?.superview != self.scrollContainer else { return }
+        guard !segmentViews.isEmpty, let indicator else { return }
+        
         let indexRange = 0 ..< segmentViews.count
-        guard let indicator, indexRange.contains(currentIndex) else { return }
+        guard indexRange.contains(currentIndex) else { return }
+        
+        if let spv = indicator.superview {
+            // refresh y
+            indicator.frame.origin.y = spv.frame.height + indicator.spacing
+            return
+        }
         
         let selectedSegmentView = segmentViews[currentIndex]
         self.scrollContainer.addSubview(indicator)
         indicator.install(withSementView: selectedSegmentView)
         // set origin.y
-        indicator.frame.origin.y = selectedSegmentView.frame.maxY + indicator.spacing
+        indicator.frame.origin.y = selectedSegmentView.inactiveSize.height + indicator.spacing
     }
     
     public func reloadIndicator() {
@@ -670,7 +677,7 @@ public final class Segmenter: UIControl {
         }
         
         switch distribution {
-        case .default:
+        case .`default`:
             scrollFrame.origin = CGPoint(x: contentInset.left, y: contentInset.top)
             scrollFrame.size.height -= contentInset.vertical
             scrollFrame.size.width = allSegmentsWidthWithSegmentSpacing
@@ -751,21 +758,17 @@ public final class Segmenter: UIControl {
             // supplementaryContainer 加了 20 的宽度偏移量, 用来给超出的 segment 做淡出/入效果, 不需要响应事件
             // bugfix: 20 + spacing, remove spacing
             let supplementaryContainerInvalidFrame = CGRect(x: f.minX, y: f.minY, width: 20, height: f.height)
-            if supplementaryContainerInvalidFrame.contains(point) {
+            let inSupplementaryContainerInvalidFrame = supplementaryContainerInvalidFrame.contains(point)
+            
+            if inSupplementaryContainerInvalidFrame {
                 responderView = scrollContainer
             } else {
-                // in supplementaryContainerView
-                let inPoint = convert(point, to: supplementaryView)
-                return supplementaryView.subviews.first(where: { $0.frame.contains(inPoint) })
-            }
-        }
-        
-        if responderView == scrollContainer {
-            let containerPoint = convert(point, to: scrollContainer)
-            for subview in scrollContainer.subviews {
-                if subview.frame.inset(by: .init(top: -10, left: -10, bottom: -10, right: -10)).contains(containerPoint) {
-                    return subview
+                let inSupplementaryView = supplementaryView.frame.contains(point)
+                if inSupplementaryView {
+                    // in supplementaryContainerView
+                    return supplementaryView.hitTest(convert(point, to: supplementaryView), with: event)
                 }
+                responderView = scrollContainer.hitTest(convert(point, to: scrollContainer), with: event)
             }
         }
         
