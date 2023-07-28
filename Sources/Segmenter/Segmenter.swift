@@ -753,8 +753,13 @@ public final class Segmenter: UIControl {
             let supplementaryContainerInvalidFrame = CGRect(x: f.minX, y: f.minY, width: 20, height: f.height)
             if supplementaryContainerInvalidFrame.contains(point) {
                 responderView = scrollContainer
+            } else {
+                // in supplementaryContainerView
+                let inPoint = convert(point, to: supplementaryView)
+                return supplementaryView.subviews.first(where: { $0.frame.contains(inPoint) })
             }
         }
+        
         if responderView == scrollContainer {
             let containerPoint = convert(point, to: scrollContainer)
             for subview in scrollContainer.subviews {
