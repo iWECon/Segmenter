@@ -57,6 +57,10 @@ class ViewController: UIViewController {
         )
     }
     
+    @objc func buttonAction(_ sender: UIButton) {
+        print(sender.title(for: .normal) as Any)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -66,6 +70,7 @@ class ViewController: UIViewController {
             btn.setTitle(title, for: .normal)
             btn.titleLabel?.font = .systemFont(ofSize: 12, weight: .medium)
             btn.setTitleColor(.systemBlue, for: .normal)
+            btn.addTarget(self, action: #selector(buttonAction(_:)), for: .touchUpInside)
             return .view(btn, verticallyOffset)
         }
         

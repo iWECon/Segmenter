@@ -394,6 +394,12 @@ public final class Segmenter: UIControl {
     }
     
     public func reloadSupplementaryViews() {
+        // hidden supplementaryView when it is empty
+        if !isAllOfOne, !isIndependentControls {
+            supplementaryView.isHidden = true
+            return
+        }
+        supplementaryView.isHidden = false
         guard isAllOfOne || isIndependentControls else { return }
         
         // load sub supplmentaryViews
@@ -761,7 +767,7 @@ public final class Segmenter: UIControl {
             let inSupplementaryContainerInvalidFrame = supplementaryContainerInvalidFrame.contains(point)
             
             if inSupplementaryContainerInvalidFrame {
-                responderView = scrollContainer
+                responderView = scrollContainer.hitTest(convert(point, to: scrollContainer), with: event)
             } else {
                 let inSupplementaryView = supplementaryView.frame.contains(point)
                 if inSupplementaryView {
